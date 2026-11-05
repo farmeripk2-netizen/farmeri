@@ -1,0 +1,21 @@
+{
+  "name": "farmeri",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -k -n API,WEB \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test",
+    "seed": "npm --prefix server run seed",
+    "format": "prettier --write \"client/src/**/*.{js,jsx,css}\" \"server/src/**/*.{js,json}\" \"server/tests/*.js\"",
+    "test:ui": "node tests/ui-check.cjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "playwright": "^1.51.1",
+    "prettier": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

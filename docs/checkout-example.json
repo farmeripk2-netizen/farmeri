@@ -1,0 +1,22 @@
+{
+  "email": "buyer@example.com",
+  "items": [
+    {
+      "product": "REPLACE_WITH_PRODUCT_ID",
+      "sku": "FM-001-M",
+      "qty": 1
+    }
+  ],
+  "coupon": "FIRST10",
+  "address": {
+    "name": "Test Buyer",
+    "phone": "+919876543210",
+    "line1": "12 Example Street",
+    "line2": "",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "postalCode": "400001",
+    "country": "India"
+  },
+  "paymentMethod": "cod"
+}

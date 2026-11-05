@@ -1,0 +1,580 @@
+[
+  {
+    "name": "Tribal Skull Hoodie",
+    "slug": "tribal-skull-hoodie",
+    "description": "Tribal Skull Hoodie from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "hoodies",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "black"
+    ],
+    "images": [
+      "/assets/tribal-skull-hoodie-front.png",
+      "/assets/tribal-skull-hoodie-back.png"
+    ],
+    "price": 320000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-01-S",
+        "size": "S",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-01-M",
+        "size": "M",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-01-L",
+        "size": "L",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-01-XL",
+        "size": "XL",
+        "color": "Black",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Tribal Skull Hoodie | Farmeri",
+      "description": "Discover Tribal Skull Hoodie \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Farmeri Maroon Tee",
+    "slug": "farmeri-maroon-tee",
+    "description": "Farmeri Maroon Tee from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "oversized-tees",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "maroon"
+    ],
+    "images": [
+      "/assets/farmeri-maroon-tee-front.png",
+      "/assets/farmeri-maroon-tee-back.png"
+    ],
+    "price": 230000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-02-S",
+        "size": "S",
+        "color": "Maroon",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-02-M",
+        "size": "M",
+        "color": "Maroon",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-02-L",
+        "size": "L",
+        "color": "Maroon",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-02-XL",
+        "size": "XL",
+        "color": "Maroon",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Farmeri Maroon Tee | Farmeri",
+      "description": "Discover Farmeri Maroon Tee \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Spider White Tee",
+    "slug": "spider-white-tee",
+    "description": "Spider White Tee from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "oversized-tees",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "white"
+    ],
+    "images": [
+      "/assets/spider-white-tee-front.png"
+    ],
+    "price": 230000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-03-S",
+        "size": "S",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-03-M",
+        "size": "M",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-03-L",
+        "size": "L",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-03-XL",
+        "size": "XL",
+        "color": "White",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Spider White Tee | Farmeri",
+      "description": "Discover Spider White Tee \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Rick and Morty Hoodie",
+    "slug": "rick-and-morty-hoodie",
+    "description": "Rick and Morty Hoodie from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "hoodies",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "white"
+    ],
+    "images": [
+      "/assets/rick-and-morty-hoodie-front.png",
+      "/assets/rick-and-morty-hoodie-back.png"
+    ],
+    "price": 320000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-04-S",
+        "size": "S",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-04-M",
+        "size": "M",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-04-L",
+        "size": "L",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-04-XL",
+        "size": "XL",
+        "color": "White",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Rick and Morty Hoodie | Farmeri",
+      "description": "Discover Rick and Morty Hoodie \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Dragon Graphic Tee",
+    "slug": "dragon-graphic-tee",
+    "description": "Dragon Graphic Tee from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "oversized-tees",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "black"
+    ],
+    "images": [
+      "/assets/dragon-graphic-tee-front.png"
+    ],
+    "price": 230000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-05-S",
+        "size": "S",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-05-M",
+        "size": "M",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-05-L",
+        "size": "L",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-05-XL",
+        "size": "XL",
+        "color": "Black",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Dragon Graphic Tee | Farmeri",
+      "description": "Discover Dragon Graphic Tee \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Beige Tribal Hoodie",
+    "slug": "beige-tribal-hoodie",
+    "description": "Beige Tribal Hoodie from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "hoodies",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "beige"
+    ],
+    "images": [
+      "/assets/beige-tribal-hoodie-front.png",
+      "/assets/beige-tribal-hoodie-back.png"
+    ],
+    "price": 320000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-06-S",
+        "size": "S",
+        "color": "Beige",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-06-M",
+        "size": "M",
+        "color": "Beige",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-06-L",
+        "size": "L",
+        "color": "Beige",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-06-XL",
+        "size": "XL",
+        "color": "Beige",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Beige Tribal Hoodie | Farmeri",
+      "description": "Discover Beige Tribal Hoodie \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Born to Die Graphic Tee",
+    "slug": "born-to-die-graphic-tee",
+    "description": "Born to Die Graphic Tee from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "oversized-tees",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "white"
+    ],
+    "images": [
+      "/assets/born-to-die-graphic-tee-front.png"
+    ],
+    "price": 230000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-07-S",
+        "size": "S",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-07-M",
+        "size": "M",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-07-L",
+        "size": "L",
+        "color": "White",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-07-XL",
+        "size": "XL",
+        "color": "White",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Born to Die Graphic Tee | Farmeri",
+      "description": "Discover Born to Die Graphic Tee \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Freedom Alien Hoodie",
+    "slug": "freedom-alien-hoodie",
+    "description": "Freedom Alien Hoodie from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "hoodies",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "black"
+    ],
+    "images": [
+      "/assets/freedom-alien-hoodie-front.png",
+      "/assets/freedom-alien-hoodie-back.png"
+    ],
+    "price": 320000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-08-S",
+        "size": "S",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-08-M",
+        "size": "M",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-08-L",
+        "size": "L",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-08-XL",
+        "size": "XL",
+        "color": "Black",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Freedom Alien Hoodie | Farmeri",
+      "description": "Discover Freedom Alien Hoodie \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Pink Graphic Hoodie",
+    "slug": "pink-graphic-hoodie",
+    "description": "Pink Graphic Hoodie from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "hoodies",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "pink"
+    ],
+    "images": [
+      "/assets/pink-graphic-hoodie-front.png",
+      "/assets/pink-graphic-hoodie-back.png"
+    ],
+    "price": 320000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-09-S",
+        "size": "S",
+        "color": "Pink",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-09-M",
+        "size": "M",
+        "color": "Pink",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-09-L",
+        "size": "L",
+        "color": "Pink",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-09-XL",
+        "size": "XL",
+        "color": "Pink",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Pink Graphic Hoodie | Farmeri",
+      "description": "Discover Pink Graphic Hoodie \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Scarface Graphic Tee",
+    "slug": "scarface-graphic-tee",
+    "description": "Scarface Graphic Tee from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "oversized-tees",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "black"
+    ],
+    "images": [
+      "/assets/scarface-graphic-tee-front.png"
+    ],
+    "price": 230000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-10-S",
+        "size": "S",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-10-M",
+        "size": "M",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-10-L",
+        "size": "L",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-10-XL",
+        "size": "XL",
+        "color": "Black",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Scarface Graphic Tee | Farmeri",
+      "description": "Discover Scarface Graphic Tee \u2014 Every Fit Counts."
+    }
+  },
+  {
+    "name": "Authority Graphic Tee",
+    "slug": "authority-graphic-tee",
+    "description": "Authority Graphic Tee from the Farmeri graphic collection. Every Fit Counts.",
+    "category": "oversized-tees",
+    "gender": "unisex",
+    "tags": [
+      "streetwear",
+      "graphic",
+      "black"
+    ],
+    "images": [
+      "/assets/authority-graphic-tee-front.png"
+    ],
+    "price": 230000,
+    "discountPrice": null,
+    "variants": [
+      {
+        "sku": "FM-REAL-11-S",
+        "size": "S",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-11-M",
+        "size": "M",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-11-L",
+        "size": "L",
+        "color": "Black",
+        "stock": 0
+      },
+      {
+        "sku": "FM-REAL-11-XL",
+        "size": "XL",
+        "color": "Black",
+        "stock": 0
+      }
+    ],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isActive": true,
+    "fabric": "Fabric details will be confirmed by Farmeri.",
+    "care": "Follow the garment care label.",
+    "seo": {
+      "title": "Authority Graphic Tee | Farmeri",
+      "description": "Discover Authority Graphic Tee \u2014 Every Fit Counts."
+    }
+  }
+]

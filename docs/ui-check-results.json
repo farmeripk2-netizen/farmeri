@@ -1,0 +1,19 @@
+{
+  "mode": "UI browser checks with intercepted API fixtures, not database integration",
+  "viewports": [
+    360,
+    768,
+    1024,
+    1440
+  ],
+  "routes": 17,
+  "flows": [
+    "mobile navigation",
+    "variant selection",
+    "add to cart",
+    "cart navigation",
+    "checkout total preview"
+  ],
+  "errors": [],
+  "overflows": []
+}

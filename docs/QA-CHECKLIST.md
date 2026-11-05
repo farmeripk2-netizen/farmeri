@@ -1,0 +1,42 @@
+# Manual QA checklist
+
+Run against a seeded local database, then repeat on final domains. Unchecked items are not claimed tested.
+
+- [ ] Register with a new email; reject invalid fields and duplicate email.
+- [ ] Verify email, reject reused/expired token, request a new token.
+- [ ] Login, reload session, refresh token rotation, logout.
+- [ ] Forgot/reset password email and expired-link errors.
+- [ ] Edit profile, add/edit/remove addresses, change password.
+- [ ] Guest cart persists on refresh; login merges it with account cart.
+- [ ] Add/remove wishlist items and reload account.
+- [ ] Search suggestions navigate to correct product; no-results state.
+- [ ] Filter category, gender, size, color, price and in-stock variants; sort and paginate.
+- [ ] Product thumbnails, zoom, size selection, unavailable size, quantity and quick add.
+- [ ] Delivery PIN check, description and policy accordions.
+- [ ] Coupon valid/invalid/expired/minimum/cap/usage limit; clear coupon.
+- [ ] Quote and final order totals are recomputed on server.
+- [ ] Guest COD order completes and full guest order requires token.
+- [ ] Customer COD order appears in account and admin.
+- [ ] Repeated same checkout key returns one order; changed payload returns conflict.
+- [ ] Two simultaneous buyers cannot oversell one remaining unit.
+- [ ] Razorpay test payment creates order, verifies capture and shows confirmation.
+- [ ] Payment dismissal/failure and retry; unpaid order expires after 30 minutes.
+- [ ] Duplicate webhook does not double-process payment.
+- [ ] Invalid signature rejected; late capture is flagged for refund.
+- [ ] Admin creates/edits/archives product; images upload and variants retain SKUs.
+- [ ] Categories, coupons, site settings, announcement toggle and hero text.
+- [ ] Admin order status rules reject invalid transitions; tracking and email updates.
+- [ ] Cancellation/return restores stock exactly once.
+- [ ] Customer cannot access another customer's order or admin API.
+- [ ] PDF invoice download requires authorized order access.
+- [ ] Review blocked without delivered purchase; moderate review and update rating.
+- [ ] Contact message saved; SMTP notification delivered; inbox status updated.
+- [ ] Newsletter duplicate submission handled.
+- [ ] Loading/error/empty states; API down and weak network behavior.
+- [ ] 360/768/1024/1440px checks; no horizontal overflow.
+- [ ] Keyboard navigation, visible focus, modal focus trap, Escape dismissal.
+- [ ] Reduced-motion mode; large images lazy-load below hero.
+- [ ] Vercel deep link refresh; Render readiness; production cookies/CORS.
+- [ ] Sitemap XML, canonical URLs, robots, metadata and final page content.
+- [ ] Replace draft policies, placeholder images and sample measurements.
+- [ ] Lighthouse performance/accessibility target measured, not assumed.
