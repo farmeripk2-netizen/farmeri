@@ -160,8 +160,12 @@ export async function loginCart() {
 }
 export async function restoreSession() {
   try {
-    const data = await request("/auth/refresh", "post");
+    const data = await request("/auth/refresh", "post", undefined, {
+      params: { mode: "bootstrap" },
+    });
     useSession.getState().setSession(data);
+    if (!data?.accessToken) return;
+
     const rows = await request("/cart");
     useCart.getState().setItems(mapCart(rows));
   } catch {

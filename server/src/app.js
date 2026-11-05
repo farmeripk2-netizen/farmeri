@@ -186,15 +186,26 @@ api.post(
 api.post(
   "/auth/refresh",
   wrap(async (req, res) => {
-    if (!req.cookies.refresh) throw fail(401, "Sign in required");
+    res.set("Cache-Control", "no-store");
+    const bootstrap = req.query.mode === "bootstrap";
+    const guestOrUnauthorized = (message) => {
+      if (bootstrap) return ok(res, null);
+      throw fail(401, message);
+    };
+
+    if (!req.cookies.refresh)
+      return guestOrUnauthorized("Sign in required");
+
     const session = await M.Session.findOneAndDelete({
       hash: hash(req.cookies.refresh),
       expiresAt: { $gt: new Date() },
     });
-    if (!session) throw fail(401, "Session expired");
+    if (!session) return guestOrUnauthorized("Session expired");
+
     const user = await M.User.findById(session.user);
-    if (!user) throw fail(401, "Account unavailable");
-    ok(res, await issue(user, res));
+    if (!user) return guestOrUnauthorized("Account unavailable");
+
+    return ok(res, await issue(user, res));
   }),
 );
 api.post(
