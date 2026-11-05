@@ -38,6 +38,9 @@ export default function Home() {
           </Link>
         </div>
         <HeroProductCarousel />
+        <div className="originals" aria-hidden="true">
+          ORIGINALS
+        </div>
         <img className="hero-mountains" src="/assets/hero-mountains.webp" alt="" />
         <motion.div style={{ y }} className="hero-statue">
           <img
@@ -46,9 +49,6 @@ export default function Home() {
             alt="Realistic carved stone angel with raised arms and spread wings"
           />
         </motion.div>
-        <div className="originals" aria-hidden="true">
-          ORIGINALS
-        </div>
         <img className="clouds" src="/assets/placeholder-clouds.svg" alt="" />
         <div className="hero-bottom">
           <span>EVERY FIT COUNTS.</span>
