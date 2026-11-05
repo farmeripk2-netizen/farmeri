@@ -62,6 +62,38 @@ const limiter = (limit) =>
     message: { success: false, error: "Too many requests. Try again later." },
   });
 app.use("/api", limiter(600));
+let vercelDbConnection;
+
+app.use(async (req, res, next) => {
+  if (process.env.VERCEL !== "1" || mongoose.connection.readyState === 1) {
+    return next();
+  }
+
+  if (!process.env.MONGODB_URI) {
+    console.error("MONGODB_URI is missing from the Vercel project");
+    return res.status(503).json({
+      success: false,
+      data: { status: "database unavailable" },
+    });
+  }
+
+  try {
+    vercelDbConnection ??= mongoose
+      .connect(config.mongo, { serverSelectionTimeoutMS: 8000 })
+      .finally(() => {
+        vercelDbConnection = undefined;
+      });
+
+    await vercelDbConnection;
+    return next();
+  } catch (error) {
+    console.error("Atlas connection failed:", error.name, error.code);
+    return res.status(503).json({
+      success: false,
+      data: { status: "database unavailable" },
+    });
+  }
+});
 app.post(
   "/api/v1/payments/webhook",
   express.raw({ type: "application/json", limit: "1mb" }),
