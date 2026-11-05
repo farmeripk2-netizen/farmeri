@@ -38,10 +38,11 @@ export default function Home() {
           </Link>
         </div>
         <HeroProductCarousel />
-        <img className="hero-mountains" src="/assets/hero-mountains.png" alt="" />
+        <img className="hero-mountains" src="/assets/hero-mountains.webp" alt="" />
         <motion.div style={{ y }} className="hero-statue">
           <img
-            src="/assets/winged-statue.png"
+            src="/assets/winged-statue.webp"
+            fetchPriority="high"
             alt="Realistic carved stone angel with raised arms and spread wings"
           />
         </motion.div>
@@ -112,13 +113,14 @@ export default function Home() {
         </div>
         <div className="category-grid">
           {[
-            ["T-shirts", "/shop?category=oversized-tees", "farmeri-maroon-tee-front.png"],
-            ["Hoodies", "/shop?category=hoodies", "tribal-skull-hoodie-front.png"],
+            ["T-shirts", "/shop?category=oversized-tees", "farmeri-maroon-tee-front.webp"],
+            ["Hoodies", "/shop?category=hoodies", "tribal-skull-hoodie-front.webp"],
           ].map(([name, to, img], i) => (
             <Link to={to} key={name} className={"category cat-" + i}>
               <span>0{i + 1} / EXPLORE</span>
               <img
                 src={"/assets/" + img}
+                loading="lazy"
                 alt={
                   name === "Accessories"
                     ? "Farmeri collection illustration"
@@ -150,7 +152,7 @@ export default function Home() {
           The Farmeri story <ArrowUpRight size={16} />
         </Link>
         <span className="statement-mark" aria-hidden="true">
-          <img src="/assets/farmeri-logo.jpg" alt="" />
+          <img src="/assets/farmeri-logo.jpg" alt="" loading="lazy" />
         </span>
       </section>
       <section className="section">
@@ -183,12 +185,12 @@ export default function Home() {
         </div>
         <div className="lookbook-grid">
           {[
-            "rick-and-morty-hoodie-front.png",
-            "authority-graphic-tee-front.png",
-            "pink-graphic-hoodie-front.png",
+            "rick-and-morty-hoodie-front.webp",
+            "authority-graphic-tee-front.webp",
+            "pink-graphic-hoodie-front.webp",
           ].map((img, i) => (
             <Link to="/shop" key={img}>
-              <img src={"/assets/" + img} alt={"Studio look " + (i + 1)} />
+              <img src={"/assets/" + img} alt={"Studio look " + (i + 1)} loading="lazy" />
               <span>
                 LOOK 0{i + 1} <ArrowUpRight size={17} />
               </span>

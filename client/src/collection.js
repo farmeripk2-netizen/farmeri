@@ -4,8 +4,8 @@ export const collection = [
     "name": "Tribal Skull Hoodie",
     "slug": "tribal-skull-hoodie",
     "images": [
-      "/assets/tribal-skull-hoodie-front.png",
-      "/assets/tribal-skull-hoodie-back.png"
+      "/assets/tribal-skull-hoodie-front.webp",
+      "/assets/tribal-skull-hoodie-back.webp"
     ],
     "category": "hoodies"
   },
@@ -13,8 +13,8 @@ export const collection = [
     "name": "Farmeri Maroon Tee",
     "slug": "farmeri-maroon-tee",
     "images": [
-      "/assets/farmeri-maroon-tee-front.png",
-      "/assets/farmeri-maroon-tee-back.png"
+      "/assets/farmeri-maroon-tee-front.webp",
+      "/assets/farmeri-maroon-tee-back.webp"
     ],
     "category": "oversized-tees"
   },
@@ -22,7 +22,7 @@ export const collection = [
     "name": "Spider White Tee",
     "slug": "spider-white-tee",
     "images": [
-      "/assets/spider-white-tee-front.png"
+      "/assets/spider-white-tee-front.webp"
     ],
     "category": "oversized-tees"
   },
@@ -30,8 +30,8 @@ export const collection = [
     "name": "Rick and Morty Hoodie",
     "slug": "rick-and-morty-hoodie",
     "images": [
-      "/assets/rick-and-morty-hoodie-front.png",
-      "/assets/rick-and-morty-hoodie-back.png"
+      "/assets/rick-and-morty-hoodie-front.webp",
+      "/assets/rick-and-morty-hoodie-back.webp"
     ],
     "category": "hoodies"
   },
@@ -39,7 +39,7 @@ export const collection = [
     "name": "Dragon Graphic Tee",
     "slug": "dragon-graphic-tee",
     "images": [
-      "/assets/dragon-graphic-tee-front.png"
+      "/assets/dragon-graphic-tee-front.webp"
     ],
     "category": "oversized-tees"
   },
@@ -47,8 +47,8 @@ export const collection = [
     "name": "Beige Tribal Hoodie",
     "slug": "beige-tribal-hoodie",
     "images": [
-      "/assets/beige-tribal-hoodie-front.png",
-      "/assets/beige-tribal-hoodie-back.png"
+      "/assets/beige-tribal-hoodie-front.webp",
+      "/assets/beige-tribal-hoodie-back.webp"
     ],
     "category": "hoodies"
   },
@@ -56,7 +56,7 @@ export const collection = [
     "name": "Born to Die Graphic Tee",
     "slug": "born-to-die-graphic-tee",
     "images": [
-      "/assets/born-to-die-graphic-tee-front.png"
+      "/assets/born-to-die-graphic-tee-front.webp"
     ],
     "category": "oversized-tees"
   },
@@ -64,8 +64,8 @@ export const collection = [
     "name": "Freedom Alien Hoodie",
     "slug": "freedom-alien-hoodie",
     "images": [
-      "/assets/freedom-alien-hoodie-front.png",
-      "/assets/freedom-alien-hoodie-back.png"
+      "/assets/freedom-alien-hoodie-front.webp",
+      "/assets/freedom-alien-hoodie-back.webp"
     ],
     "category": "hoodies"
   },
@@ -73,8 +73,8 @@ export const collection = [
     "name": "Pink Graphic Hoodie",
     "slug": "pink-graphic-hoodie",
     "images": [
-      "/assets/pink-graphic-hoodie-front.png",
-      "/assets/pink-graphic-hoodie-back.png"
+      "/assets/pink-graphic-hoodie-front.webp",
+      "/assets/pink-graphic-hoodie-back.webp"
     ],
     "category": "hoodies"
   },
@@ -82,7 +82,7 @@ export const collection = [
     "name": "Scarface Graphic Tee",
     "slug": "scarface-graphic-tee",
     "images": [
-      "/assets/scarface-graphic-tee-front.png"
+      "/assets/scarface-graphic-tee-front.webp"
     ],
     "category": "oversized-tees"
   },
@@ -90,7 +90,7 @@ export const collection = [
     "name": "Authority Graphic Tee",
     "slug": "authority-graphic-tee",
     "images": [
-      "/assets/authority-graphic-tee-front.png"
+      "/assets/authority-graphic-tee-front.webp"
     ],
     "category": "oversized-tees"
   }
