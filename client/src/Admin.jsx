@@ -4,6 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2, ArrowUpRight } from "lucide-react";
 import { useSession, request, money, errorText, notify } from "./state";
 import { useData, DataState, PageHead, Modal, Field, SEO } from "./ui";
+import { placements } from "./storefront";
+import StorefrontEditor, { RackEditor, ImageField } from "./StorefrontEditor";
 const blankProduct = {
   name: "",
   slug: "",
@@ -14,8 +16,11 @@ const blankProduct = {
   price: 230000,
   discountPrice: null,
   variants: [{ sku: "", size: "M", color: "Black", stock: 0 }],
+  isHero: false,
+  isRack: false,
+  hangerImage: "",
   isFeatured: false,
-  isNewArrival: true,
+  isNewArrival: false,
   isActive: true,
   fabric: "",
   care: "",
@@ -44,7 +49,8 @@ export default function Admin() {
     try {
       await request(path, method, data);
       notify("Saved");
-      refresh();
+      await refresh();
+      for (const key of ["settings", "homepageProducts", "featured", "arrivals", "products", "categories"]) qc.invalidateQueries({ queryKey: [key] });
       return true;
     } catch (e) {
       notify(errorText(e));
@@ -54,6 +60,8 @@ export default function Admin() {
   const tabs = [
     "stats",
     "products",
+    "rack",
+    "storefront",
     "categories",
     "orders",
     "customers",
@@ -77,7 +85,7 @@ export default function Admin() {
                 setFilter("");
               }}
             >
-              {t === "stats" ? "Dashboard" : t}
+              {t === "stats" ? "Dashboard" : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
           <Link to="/">View storefront ↗</Link>
@@ -113,7 +121,7 @@ export default function Admin() {
                   <>
                     <div className="stat-grid">
                       {[
-                        ["Collected revenue", money(data.revenue)],
+                        ["Collected revenue (PKR)", money(data.revenue)],
                         ["Orders", data.orders],
                         ["Customers", data.customers],
                       ].map(([label, value]) => (
@@ -172,6 +180,10 @@ export default function Admin() {
                     />
                   </>
                 );
+              if (tab === "rack")
+                return <RackEditor products={data} onToggle={(id, isRack) => mutate("/admin/rack/" + id, "patch", { isRack })} />;
+              if (tab === "storefront")
+                return <StorefrontEditor initial={data} onSave={(draft) => mutate("/admin/storefront", "put", draft)} />;
               if (tab === "settings")
                 return (
                   <form
@@ -216,7 +228,7 @@ export default function Admin() {
                       Announcement enabled
                     </label>
                     <Field
-                      label="Free shipping threshold (₹)"
+                      label="Free shipping threshold (PKR)"
                       name="shippingThreshold"
                       type="number"
                       min="0"
@@ -224,7 +236,7 @@ export default function Admin() {
                       defaultValue={data.shippingThreshold / 100}
                     />
                     <Field
-                      label="Shipping fee (₹)"
+                      label="Shipping fee (PKR)"
                       name="shippingFee"
                       type="number"
                       min="0"
@@ -248,7 +260,7 @@ export default function Admin() {
                       required
                     />
                     <Field
-                      label="Serviceable PIN prefixes (comma-separated; blank = all)"
+                      label="Serviceable postal code prefixes (comma-separated; blank = all)"
                       name="serviceablePrefixes"
                       defaultValue={data.serviceablePrefixes.join(",")}
                     />
@@ -332,7 +344,7 @@ export default function Admin() {
                         <Link to={"/order/" + o._id}>
                           <strong>{o.number} ↗</strong>
                         </Link>
-                        <span>{money(o.total)}</span>
+                        <span>{money(o.total, o.currency)}</span>
                       </div>
                       <p>
                         {o.email} · {o.paymentMethod} · {o.paymentStatus}
@@ -524,13 +536,15 @@ function Records({ rows, columns, actions, renderCell }) {
 }
 function ProductEditor({ initial, onSave }) {
   const [p, setP] = useState({ ...blankProduct, ...initial }),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false), [uploads,setUploads] = useState(0);
+  const categories = useData(["admin","categories"], "/admin/categories");
   const change = (k, v) => setP((prev) => ({ ...prev, [k]: v }));
   return (
     <form
       className="form"
       onSubmit={async (e) => {
         e.preventDefault();
+        if (uploads || busy) return;
         setBusy(true);
         try {
           await onSave(p);
@@ -561,12 +575,12 @@ function ProductEditor({ initial, onSave }) {
         />
       </label>
       <div className="form-grid">
-        <Field
-          label="Category slug"
-          value={p.category}
-          onChange={(e) => change("category", e.target.value)}
-          required
-        />
+        <label>Category
+          <select value={p.category} onChange={(e) => change("category", e.target.value)} required>
+            {!categories.data?.some((c) => c.slug === p.category) && <option value={p.category}>{p.category}</option>}
+            {categories.data?.map((c) => <option value={c.slug} key={c._id}>{c.name}</option>)}
+          </select>
+        </label>
         <label>
           Gender
           <select
@@ -579,7 +593,7 @@ function ProductEditor({ initial, onSave }) {
           </select>
         </label>
         <Field
-          label="MRP (₹)"
+          label="MRP (PKR)"
           type="number"
           min="0.01"
           step="0.01"
@@ -590,7 +604,7 @@ function ProductEditor({ initial, onSave }) {
           required
         />
         <Field
-          label="Sale price (₹)"
+          label="Sale price (PKR)"
           type="number"
           min="0.01"
           step="0.01"
@@ -617,14 +631,21 @@ function ProductEditor({ initial, onSave }) {
           type="file"
           accept="image/png,image/jpeg,image/webp"
           multiple
+          disabled={uploads > 0 || busy}
           onChange={async (e) => {
+            const input = e.currentTarget;
             const form = new FormData();
-            for (const file of e.target.files) form.append("images", file);
+            for (const file of input.files) form.append("images", file);
+            if (!input.files.length) return;
+            setUploads((n) => n + 1);
             try {
               const urls = await request("/admin/uploads", "post", form);
-              change("images", [...p.images.filter(Boolean), ...urls]);
+              setP((prev) => ({ ...prev, images: [...prev.images.filter(Boolean), ...urls] }));
             } catch (e) {
               notify(errorText(e));
+            } finally {
+              input.value = "";
+              setUploads((n) => n - 1);
             }
           }}
         />
@@ -710,16 +731,17 @@ function ProductEditor({ initial, onSave }) {
         value={p.tags.join(",")}
         onChange={(e) => change("tags", e.target.value.split(","))}
       />
-      {["isFeatured", "isNewArrival", "isActive"].map((k) => (
-        <label className="check" key={k}>
-          <input
-            type="checkbox"
-            checked={p[k]}
-            onChange={(e) => change(k, e.target.checked)}
-          />
-          {k}
-        </label>
-      ))}
+      <fieldset className="studio-group">
+        <legend>Show this product in</legend>
+        <p>Select any combination. If you leave all boxes clear, the item stays in the shop only.</p>
+        {Object.entries(placements).map(([key,label]) => <label className="check" key={key}>
+          <input type="checkbox" checked={!!p[key]} onChange={(e) => change(key,e.target.checked)} /> {label}
+        </label>)}
+        <ImageField label="Rack / hero cutout (optional)" value={p.hangerImage || ""}
+          update={(value) => change("hangerImage",value)} busyChange={(delta) => setUploads((n) => n + delta)} />
+        <small>Use a transparent PNG or WebP with the garment facing forward. If left blank, the first product photo is used.</small>
+      </fieldset>
+      <label className="check"><input type="checkbox" checked={p.isActive} onChange={(e) => change("isActive",e.target.checked)} /> Published in the shop</label>
       <h3>Search engine preview</h3>
       {["title", "description", "keywords"].map((k) => (
         <Field
@@ -729,7 +751,7 @@ function ProductEditor({ initial, onSave }) {
           onChange={(e) => change("seo", { ...p.seo, [k]: e.target.value })}
         />
       ))}
-      <button disabled={busy}>{busy ? "Saving…" : "Save product"}</button>
+      <button disabled={busy || uploads > 0}>{busy ? "Saving…" : uploads ? "Uploading…" : "Save product"}</button>
     </form>
   );
 }
@@ -767,11 +789,11 @@ function SimpleEditor({ type, initial, onSave }) {
             Type
             <select name="type" defaultValue={initial.type || "percent"}>
               <option value="percent">Percentage</option>
-              <option value="flat">Flat amount (₹)</option>
+              <option value="flat">Flat amount (PKR)</option>
             </select>
           </label>
           <Field
-            label="Value (% or ₹)"
+            label="Value (% or PKR)"
             name="value"
             type="number"
             step="0.01"
@@ -784,14 +806,14 @@ function SimpleEditor({ type, initial, onSave }) {
             required
           />
           <Field
-            label="Minimum cart (₹)"
+            label="Minimum cart (PKR)"
             name="minCart"
             type="number"
             min="0"
             defaultValue={(initial.minCart || 0) / 100}
           />
           <Field
-            label="Maximum discount (₹; optional)"
+            label="Maximum discount (PKR; optional)"
             name="maxDiscount"
             type="number"
             min="1"

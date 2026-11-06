@@ -1,0 +1,440 @@
+{
+  "navigation": {
+    "logo": "/assets/farmeri-logo.jpg",
+    "logoAlt": "Farmeri",
+    "links": [
+      {
+        "label": "New & Featured",
+        "href": "/new"
+      },
+      {
+        "label": "T-shirts",
+        "href": "/shop?category=oversized-tees"
+      },
+      {
+        "label": "Hoodies",
+        "href": "/shop?category=hoodies"
+      }
+    ],
+    "mobileTitle": "Explore Farmeri",
+    "mobileSearch": "Search the store",
+    "mobileLinks": [
+      {
+        "label": "New & Featured",
+        "href": "/new"
+      },
+      {
+        "label": "T-shirts",
+        "href": "/shop?category=oversized-tees"
+      },
+      {
+        "label": "Hoodies",
+        "href": "/shop?category=hoodies"
+      },
+      {
+        "label": "Shop all",
+        "href": "/shop"
+      },
+      {
+        "label": "Our story",
+        "href": "/about"
+      },
+      {
+        "label": "Wishlist",
+        "href": "/wishlist"
+      },
+      {
+        "label": "Your account",
+        "href": "/account"
+      },
+      {
+        "label": "Contact",
+        "href": "/contact"
+      }
+    ],
+    "announcementNote": "INDEPENDENT SPIRIT. EVERY DAY.",
+    "searchTitle": "Find your next favourite",
+    "searchPlaceholder": "Search tees, hoodies, originals…"
+  },
+  "footer": {
+    "logo": "/assets/farmeri-logo.jpg",
+    "logoAlt": "Farmeri",
+    "description": "For the ones who move differently.\nMade for your own kind of everyday.",
+    "copyright": "Farmeri. All rights reserved.",
+    "market": "PAKISTAN / PKR",
+    "tagline": "EVERY FIT COUNTS.",
+    "columns": [
+      {
+        "title": "EXPLORE",
+        "links": [
+          {
+            "label": "Shop all",
+            "href": "/shop"
+          },
+          {
+            "label": "New & Featured",
+            "href": "/new"
+          },
+          {
+            "label": "T-shirts",
+            "href": "/shop?category=oversized-tees"
+          },
+          {
+            "label": "Hoodies",
+            "href": "/shop?category=hoodies"
+          }
+        ]
+      },
+      {
+        "title": "HERE TO HELP",
+        "links": [
+          {
+            "label": "Contact",
+            "href": "/contact"
+          },
+          {
+            "label": "Track your order",
+            "href": "/track-order"
+          },
+          {
+            "label": "Shipping & returns",
+            "href": "/shipping-returns"
+          },
+          {
+            "label": "Size guide",
+            "href": "/size-guide"
+          },
+          {
+            "label": "FAQs",
+            "href": "/faq"
+          }
+        ]
+      },
+      {
+        "title": "FARMERI WORLD",
+        "links": [
+          {
+            "label": "Our story",
+            "href": "/about"
+          },
+          {
+            "label": "Your account",
+            "href": "/account"
+          },
+          {
+            "label": "Privacy policy",
+            "href": "/privacy"
+          },
+          {
+            "label": "Terms & conditions",
+            "href": "/terms"
+          }
+        ]
+      }
+    ]
+  },
+  "home": {
+    "seoTitle": "Every Fit Counts",
+    "seoDescription": "Independent spirit. Uncompromising streetwear. Discover Farmeri graphic essentials.",
+    "hero": {
+      "leftLabel": "INDEPENDENT STREETWEAR",
+      "rightLabel": "COLLECTION / 026",
+      "eyebrow": "FOR THE ONES WHO NEVER FIT THE MOULD",
+      "button": {
+        "label": "New Arrival",
+        "href": "/new"
+      },
+      "originals": "ORIGINALS",
+      "mountains": "/assets/hero-mountains.webp",
+      "statue": "/assets/winged-statue.webp",
+      "clouds": "/assets/placeholder-clouds.svg",
+      "footerLeft": "EVERY FIT COUNTS.",
+      "scrollLabel": "SCROLL TO EXPLORE",
+      "footerRight": "EST. 2026",
+      "carouselHint": "SWIPE OR TAP TO VIEW"
+    },
+    "rack": {
+      "enabled": true,
+      "title": "The Rack.",
+      "eyebrow": "THE FARMERI SHOWROOM",
+      "description": "Take a piece off the rack for a closer look.",
+      "emptyText": "New pieces are coming to the rack.",
+      "viewLabel": "View product",
+      "frontLabel": "Front",
+      "backLabel": "Back",
+      "returnLabel": "Back to the rack"
+    },
+    "featured": {
+      "enabled": true,
+      "title": "Featured.",
+      "eyebrow": "YOUR NEXT EVERYDAY ESSENTIAL",
+      "button": {
+        "label": "Explore all",
+        "href": "/shop"
+      }
+    },
+    "fit": {
+      "enabled": true,
+      "title": "Find your fit.",
+      "eyebrow": "NO RULES. JUST YOU.",
+      "description": "Relaxed silhouettes. Find the fit that feels like you.",
+      "button": {
+        "label": "Explore the size guide",
+        "href": "/size-guide"
+      }
+    },
+    "collections": {
+      "enabled": true,
+      "title": "Collections.",
+      "eyebrow": "EXPLORE FARMERI",
+      "cards": [
+        {
+          "label": "T-shirts",
+          "href": "/shop?category=oversized-tees",
+          "image": "/assets/farmeri-maroon-tee-front.webp",
+          "tag": "01 / EXPLORE"
+        },
+        {
+          "label": "Hoodies",
+          "href": "/shop?category=hoodies",
+          "image": "/assets/tribal-skull-hoodie-front.webp",
+          "tag": "02 / EXPLORE"
+        }
+      ]
+    },
+    "featuredProducts": {
+      "enabled": true,
+      "title": "Featured products.",
+      "eyebrow": "THE FARMERI PICKS",
+      "button": {
+        "label": "Shop all",
+        "href": "/shop"
+      }
+    },
+    "newDrops": {
+      "enabled": true,
+      "title": "New drops.",
+      "eyebrow": "FRESH OUT OF THE STUDIO",
+      "button": {
+        "label": "View the drop",
+        "href": "/new"
+      }
+    },
+    "everyday": {
+      "enabled": true,
+      "title": "The everyday edit.",
+      "eyebrow": "FARMERI / IN THE WILD",
+      "note": "STUDIO LOOKBOOK — VOL. 01",
+      "cards": [
+        {
+          "label": "LOOK 01",
+          "href": "/shop",
+          "image": "/assets/rick-and-morty-hoodie-front.webp"
+        },
+        {
+          "label": "LOOK 02",
+          "href": "/shop",
+          "image": "/assets/authority-graphic-tee-front.webp"
+        },
+        {
+          "label": "LOOK 03",
+          "href": "/shop",
+          "image": "/assets/pink-graphic-hoodie-front.webp"
+        }
+      ]
+    },
+    "contact": {
+      "enabled": true,
+      "title": "Let’s talk.",
+      "eyebrow": "HERE TO HELP",
+      "description": "Sizing questions, order help or a new idea. We’re listening.",
+      "button": {
+        "label": "Contact Farmeri",
+        "href": "/contact"
+      }
+    },
+    "community": {
+      "enabled": true,
+      "title": "From our community.",
+      "eyebrow": "WORN YOUR WAY",
+      "emptyText": "Verified customer stories will appear here after our first deliveries."
+    },
+    "statement": {
+      "enabled": true,
+      "eyebrow": "MORE THAN WHAT YOU WEAR",
+      "title": "Not made to fit in.",
+      "emphasis": "Made to feel like you.",
+      "description": "For the quiet rebels. The restless creatives. The ones writing their own story. This is your space.",
+      "button": {
+        "label": "The Farmeri story",
+        "href": "/about"
+      },
+      "image": "/assets/farmeri-logo.jpg"
+    },
+    "values": {
+      "enabled": true,
+      "cards": [
+        {
+          "title": "Your fit. Your rules.",
+          "text": "Relaxed silhouettes, everyday expression."
+        },
+        {
+          "title": "Details that matter.",
+          "text": "Explore fabric and care on every product."
+        },
+        {
+          "title": "Here for your journey.",
+          "text": "Need help? Talk to the Farmeri team."
+        }
+      ]
+    }
+  },
+  "newsletter": {
+    "enabled": true,
+    "title": "Good things.\nNo noise.",
+    "eyebrow": "THE INNER CIRCLE",
+    "description": "New drops, studio notes and first access. In your inbox.",
+    "placeholder": "Your email address",
+    "consent": "By subscribing, you agree to our",
+    "policy": {
+      "label": "Privacy Policy",
+      "href": "/privacy"
+    }
+  },
+  "checkout": {
+    "deliveryNote": "Standard delivery · 4–7 business days",
+    "countryLabel": "Pakistan",
+    "paymentLabel": "Cash on Delivery",
+    "title": "Make it yours.",
+    "eyebrow": "FARMERI / SECURE CHECKOUT",
+    "deliveryHeading": "Contact & delivery",
+    "shippingHeading": "Shipping",
+    "paymentHeading": "Payment",
+    "summaryHeading": "Your order"
+  },
+  "pages": {
+    "contact": {
+      "title": "Let’s talk.",
+      "description": "Sizing questions, order help or a new idea. We’re listening.",
+      "submitLabel": "Send message"
+    },
+    "about": {
+      "eyebrow": "FARMERI / OUR STORY",
+      "title": "For the fearless soul.",
+      "description": "Style is personal. What you wear should feel like an extension of who you are.",
+      "image": "/assets/winged-statue.webp",
+      "storyTitle": "Everyday pieces. Independent spirit.",
+      "story": "Farmeri brings together relaxed silhouettes and expressive graphics. An open invitation to wear what feels right, move at your own pace, and tell your own story.",
+      "button": {
+        "label": "Explore the collection",
+        "href": "/shop"
+      }
+    },
+    "sizeGuide": {
+      "title": "Find your fit.",
+      "description": "Oversized tee measurements in inches.",
+      "instructions": "Lay a favourite tee flat. Measure across the chest and double it, then compare garment length from shoulder to hem.",
+      "rows": [
+        {
+          "size": "S",
+          "chest": "42",
+          "length": "27"
+        },
+        {
+          "size": "M",
+          "chest": "44",
+          "length": "28"
+        },
+        {
+          "size": "L",
+          "chest": "46",
+          "length": "29"
+        },
+        {
+          "size": "XL",
+          "chest": "48",
+          "length": "30"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Good questions.",
+      "sections": [
+        {
+          "title": "How do I choose a size?",
+          "text": "Check the size guide and each product’s fit notes. Contact us if you need help choosing."
+        },
+        {
+          "title": "Can I pay on delivery?",
+          "text": "Yes, Cash on Delivery is available for eligible delivery areas. Availability is checked at checkout."
+        },
+        {
+          "title": "Where is my order?",
+          "text": "Use the Track Order page with your order number and email. Signed-in customers can also check their account."
+        },
+        {
+          "title": "How do I care for my clothing?",
+          "text": "Follow the garment label. Each product page includes fabric and care notes."
+        }
+      ]
+    },
+    "shippingReturns": {
+      "title": "Shipping & returns.",
+      "sections": [
+        {
+          "title": "Delivery",
+          "text": "Draft policy — owner approval required before launch. The demo checkout uses a 4–7 business-day estimate. Confirm actual dispatch times, courier coverage and charges before accepting orders."
+        },
+        {
+          "title": "Returns & exchanges",
+          "text": "Draft policy — contact support with your order number and reason for return. The owner must set the eligibility period, condition requirements, return shipping responsibility and refund timing before launch."
+        },
+        {
+          "title": "Payment issues",
+          "text": "Contact support if payment was deducted but your order remains pending. Do not place repeated orders while an existing payment is being checked."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Your privacy matters.",
+      "sections": [
+        {
+          "title": "Information used",
+          "text": "Draft for owner review. Farmeri processes account details, delivery information, order history and messages you submit to provide store services."
+        },
+        {
+          "title": "Service providers",
+          "text": "Configured payment, image hosting and email providers process information necessary to complete the requested service. Card details are entered in the payment provider’s checkout."
+        },
+        {
+          "title": "Your choices",
+          "text": "Contact the store to request access, correction or deletion of your information. Before launch, specify the responsible business, contact address, retention periods and applicable privacy obligations."
+        }
+      ]
+    },
+    "terms": {
+      "title": "The fine print.",
+      "sections": [
+        {
+          "title": "Using Farmeri",
+          "text": "Draft terms for owner review before launch. Product listings, availability and pricing are subject to confirmation at checkout."
+        },
+        {
+          "title": "Orders & payment",
+          "text": "An order may be cancelled if stock or payment cannot be confirmed. Online payment and fulfillment status can be checked in your account."
+        },
+        {
+          "title": "Policies",
+          "text": "Shipping, returns and privacy terms apply alongside these terms. The owner must add business identity, jurisdiction and approved customer policies before launch."
+        }
+      ]
+    },
+    "shop": {
+      "title": "The collection.",
+      "description": "Considered essentials. Bold expression. Find what feels like you.",
+      "newTitle": "The latest drop.",
+      "searchLabel": "Search",
+      "allProducts": "All products"
+    }
+  }
+}

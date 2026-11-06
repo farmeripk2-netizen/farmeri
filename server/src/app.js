@@ -1,3 +1,4 @@
+import { storefrontContent, storefrontSchema } from "./storefront.js";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -29,6 +30,7 @@ import {
   razor,
   canAccess,
   publicOrder,
+  orderCurrency,
   capturePayment,
   updateStatus,
 } from "./commerce.js";
@@ -427,6 +429,14 @@ async function listProducts(req, res) {
 }
 api.get("/products", wrap(listProducts));
 api.get("/products/search", wrap(listProducts));
+api.get("/products/homepage", wrap(async (_req, res) => {
+  const query = (flag) => M.Product.find({ isActive: true, [flag]: true })
+    .sort({ createdAt: -1, _id: -1 }).lean();
+  const [hero, rack, featured, newDrops] = await Promise.all([
+    query("isHero"), query("isRack"), query("isFeatured"), query("isNewArrival"),
+  ]);
+  ok(res, { hero, rack, featured, newDrops });
+}));
 api.get(
   "/products/featured",
   wrap(async (req, res) => {
@@ -510,9 +520,8 @@ api.get(
     const s = (await M.settings()).toObject();
     ok(res, {
       ...s,
-      onlinePaymentsEnabled: !!(
-        process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET
-      ),
+      announcement: s.announcement?.replaceAll("₹", "PKR "),
+      storefront: storefrontContent(s.storefront),
     });
   }),
 );
@@ -520,7 +529,7 @@ api.post(
   "/shipping/check",
   wrap(async (req, res) => {
     const { postalCode } = V.z
-      .object({ postalCode: V.z.string().regex(/^\d{6}$/) })
+      .object({ postalCode: V.postalCode })
       .parse(req.body);
     const s = await M.settings();
     ok(res, {
@@ -672,6 +681,7 @@ api.get(
       "Content-Disposition",
       `attachment; filename="${o.number}.pdf"`,
     );
+    const currency = orderCurrency(o);
     const doc = new PDFDocument({ margin: 50 });
     doc.pipe(res);
     doc.fontSize(30).text("FARMERI");
@@ -684,11 +694,11 @@ api.get(
     for (const i of o.items)
       doc
         .text(
-          `${i.name} - ${i.size} / ${i.color}\n${i.qty} x INR ${(i.price / 100).toFixed(2)} = INR ${((i.qty * i.price) / 100).toFixed(2)}`,
+          `${i.name} - ${i.size} / ${i.color}\n${i.qty} x ${currency} ${(i.price / 100).toFixed(2)} = ${currency} ${((i.qty * i.price) / 100).toFixed(2)}`,
         )
         .moveDown();
     for (const k of ["subtotal", "discount", "shipping", "tax", "total"])
-      doc.text(`${k.toUpperCase()}: INR ${(o[k] / 100).toFixed(2)}`);
+      doc.text(`${k.toUpperCase()}: ${currency} ${(o[k] / 100).toFixed(2)}`);
     doc.moveDown().text("Thank you for choosing Farmeri.");
     doc.end();
   }),
@@ -837,6 +847,7 @@ a.get(
           {
             $match: {
               paymentStatus: "paid",
+              "address.country": "Pakistan",
               status: { $nin: ["Cancelled", "Returned"] },
             },
           },
@@ -1083,9 +1094,30 @@ a.patch(
     ),
   ),
 );
+a.get("/rack", wrap(async (_req, res) => {
+  ok(res, await M.Product.find({ isActive: true }).select("name slug images hangerImage isRack")
+    .sort({ name: 1 }).lean());
+}));
+a.patch("/rack/:id", wrap(async (req, res) => {
+  const { isRack } = V.z.object({ isRack: V.z.boolean() }).parse(req.body);
+  const product = await M.Product.findOneAndUpdate(
+    { _id: V.id.parse(req.params.id), isActive: true }, { $set: { isRack } }, { new: true },
+  ).select("name slug images hangerImage isRack");
+  if (!product) throw fail(404, "Active product not found");
+  ok(res, product);
+}));
+a.get("/storefront", wrap(async (_req, res) => {
+  const s = await M.settings();
+  ok(res, storefrontContent(s.storefront));
+}));
+a.put("/storefront", wrap(async (req, res) => {
+  const storefront = storefrontSchema.parse(req.body);
+  await M.Settings.updateOne({ key: "site" }, { $set: { storefront } }, { upsert: true });
+  ok(res, storefront);
+}));
 a.get(
   "/settings",
-  wrap(async (req, res) => ok(res, await M.settings())),
+  wrap(async (req, res) => { const s = (await M.settings()).toObject(); ok(res, { ...s, announcement: s.announcement?.replaceAll("₹", "PKR ") }); }),
 );
 a.put(
   "/settings",

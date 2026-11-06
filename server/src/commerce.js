@@ -72,7 +72,7 @@ export async function quote(input, session = null) {
     s.serviceablePrefixes.length &&
     !s.serviceablePrefixes.some((p) => input.address.postalCode.startsWith(p))
   )
-    throw fail(400, "Delivery is not available for this PIN");
+    throw fail(400, "Delivery is not available for this postal code");
   return {
     items: lines,
     ...calculateTotals(subtotal, coupon, s),
@@ -93,7 +93,6 @@ export function razor() {
 export async function createOrder(input, user, key) {
   if (!key || !/^[A-Za-z0-9-]{16,100}$/.test(key))
     throw fail(400, "A valid Idempotency-Key is required");
-  if (input.paymentMethod === "razorpay") razor();
   const requestHash = hash(
     JSON.stringify({ input, user: String(user?._id || "guest") }),
   );
@@ -106,6 +105,8 @@ export async function createOrder(input, user, key) {
       guestToken: !existing.user ? guestToken(key) : undefined,
     };
   }
+  if (input.paymentMethod !== "cod")
+    throw fail(400, "Choose Cash on Delivery for new orders in Pakistan.");
   const session = await mongoose.startSession();
   let order;
   const guest = !user ? guestToken(key) : undefined;
@@ -161,7 +162,7 @@ export async function createOrder(input, user, key) {
         await enqueue(
           order.email,
           `Farmeri order ${order.number}`,
-          `Thank you for your order. Total: INR ${(order.total / 100).toFixed(2)}. Payment: Cash on Delivery. Track at ${config.origin}/track-order`,
+          `Thank you for your order. Total: PKR ${(order.total / 100).toFixed(2)}. Payment: Cash on Delivery. Track at ${config.origin}/track-order`,
           session,
         );
     });
@@ -192,8 +193,11 @@ export function canAccess(order, req) {
         hash(req.headers["x-order-token"]) === order.guestHash))
   );
 }
+export const orderCurrency = (order) =>
+  order.address?.country === "India" || order.paymentMethod === "razorpay" ? "INR" : config.currency;
 export function publicOrder(order) {
   const o = order.toObject ? order.toObject() : { ...order };
+  o.currency = orderCurrency(o);
   delete o.guestHash;
   delete o.requestHash;
   delete o.idempotencyKey;

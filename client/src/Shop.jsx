@@ -1,8 +1,10 @@
+import { useStorefront } from "./storefront";
 import { useState } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useData, DataState, ProductCard, PageHead, SEO, Empty } from "./ui";
 export default function Shop() {
+  const { pages: { shop: copy } } = useStorefront();
   const [params, setParams] = useSearchParams();
   const { pathname } = useLocation();
   const [filters, setFilters] = useState(false);
@@ -16,10 +18,10 @@ export default function Shop() {
   const categories = useData("categories", "/categories");
   const title =
     pathname === "/search"
-      ? "Search: " + (params.get("q") || "All products")
+      ? copy.searchLabel + ": " + (params.get("q") || copy.allProducts)
       : pathname === "/new"
-            ? "The latest drop."
-            : "The collection.";
+            ? copy.newTitle
+            : copy.title;
   function update(k, v) {
     const next = new URLSearchParams(params);
     if (v) next.set(k, v);
@@ -31,7 +33,7 @@ export default function Shop() {
     <div className="section shop">
       <SEO title={title} />
       <PageHead title={title}>
-        Considered essentials. Bold expression. Find what feels like you.
+        {copy.description}
       </PageHead>
       <div className="shop-bar">
         <button className="outline" onClick={() => setFilters(!filters)}>
@@ -92,7 +94,7 @@ export default function Shop() {
               </select>
             </label>
             <label>
-              Maximum price (₹)
+              Maximum price (PKR)
               <input
                 type="number"
                 min="0"

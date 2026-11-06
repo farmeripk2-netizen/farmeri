@@ -174,7 +174,7 @@ function Detail({ p }) {
                   postalCode: new FormData(e.currentTarget).get("postalCode"),
                 });
                 notify(
-                  r.available ? r.message : "Delivery unavailable for this PIN",
+                  r.available ? r.message : "Delivery unavailable for this postal code",
                 );
               } catch (e) {
                 notify(errorText(e));
@@ -183,9 +183,10 @@ function Detail({ p }) {
           >
             <input
               name="postalCode"
-              placeholder="Enter PIN code"
-              aria-label="Delivery PIN"
-              pattern="[0-9]{6}"
+              placeholder="Enter postal code"
+              aria-label="Delivery postal code"
+              inputMode="numeric"
+              pattern="[0-9]{5}"
               required
             />
             <button className="outline">Check</button>

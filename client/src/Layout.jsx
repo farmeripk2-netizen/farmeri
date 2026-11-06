@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Link,
-  NavLink,
   Outlet,
   useLocation,
   useNavigate,
@@ -16,6 +15,7 @@ import {
 } from "lucide-react";
 import { useCart, useNotice, useSession, money } from "./state";
 import { Modal, useData } from "./ui";
+import { ContentLink, useStorefront } from "./storefront";
 export default function Layout() {
   const { pathname } = useLocation();
   const [drawer, setDrawer] = useState(false),
@@ -28,6 +28,7 @@ export default function Layout() {
     user = useSession((s) => s.user),
     notice = useNotice((s) => s.notice);
   const settings = useData("settings", "/settings/public");
+  const {navigation, footer} = useStorefront();
   useEffect(() => {
     const t = setTimeout(() => setDebounced(term), 250);
     return () => clearTimeout(t);
@@ -47,13 +48,9 @@ export default function Layout() {
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
-  const links = (
-    <>
-      <NavLink to="/new">New & Featured</NavLink>
-      <NavLink to="/shop?category=oversized-tees">T-shirts</NavLink>
-      <NavLink to="/shop?category=hoodies">Hoodies</NavLink>
-    </>
-  );
+  const links = (entries, onClick) => entries.map(({ label, href }, i) => (
+    <ContentLink key={i} href={href === "/account" && !user ? "/login" : href} onClick={onClick}>{label}</ContentLink>
+  ));
   return (
     <>
       <a className="skip" href="#main">
@@ -62,7 +59,7 @@ export default function Layout() {
       {settings.data?.announcementEnabled && (
         <div className="announcement">
           {settings.data.announcement}
-          <span>INDEPENDENT SPIRIT. EVERY DAY.</span>
+          <span>{navigation.announcementNote}</span>
         </div>
       )}
       <header
@@ -72,11 +69,11 @@ export default function Layout() {
           (pathname === "/" ? "over-hero" : "")
         }
       >
-        <Link className="logo" to="/" aria-label="Farmeri home">
-          <img src="/assets/farmeri-logo.jpg" alt="Farmeri" width="159" height="111" />
+        <Link className="logo" to="/" aria-label={navigation.logoAlt + " home"}>
+          {navigation.logo ? <img src={navigation.logo} alt={navigation.logoAlt} width="159" height="111" /> : navigation.logoAlt}
         </Link>
         <nav className="desktop-links" aria-label="Main navigation">
-          {links}
+          {links(navigation.links)}
         </nav>
         <div className="nav-actions">
           <button
@@ -114,14 +111,9 @@ export default function Layout() {
         </div>
       </header>
       {drawer && (
-        <Modal title="Explore Farmeri" onClose={() => setDrawer(false)}>
+        <Modal title={navigation.mobileTitle} onClose={() => setDrawer(false)}>
           <nav className="drawer-links">
-            {links}
-            <Link to="/shop">Shop all</Link>
-            <Link to="/about">Our story</Link>
-            <Link to="/wishlist">Wishlist</Link>
-            <Link to={user ? "/account" : "/login"}>Your account</Link>
-            <Link to="/contact">Contact</Link>
+            {links(navigation.mobileLinks, () => setDrawer(false))}
           </nav>
           <button
             onClick={() => {
@@ -129,13 +121,13 @@ export default function Layout() {
               setSearch(true);
             }}
           >
-            Search the store
+            {navigation.mobileSearch}
           </button>
         </Modal>
       )}
       {search && (
         <Modal
-          title="Find your next favourite"
+          title={navigation.searchTitle}
           onClose={() => setSearch(false)}
         >
           <form
@@ -150,7 +142,7 @@ export default function Layout() {
               autoFocus
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              placeholder="Search tees, hoodies, originals…"
+              placeholder={navigation.searchPlaceholder}
               aria-label="Search products"
             />
             <button type="submit">
@@ -184,44 +176,14 @@ export default function Layout() {
       <footer>
         <div className="footer-top">
           <div>
-            <Link className="logo" to="/">
-              <img src="/assets/farmeri-logo.jpg" alt="Farmeri" width="159" height="111" />
-            </Link>
-            <p>
-              For the ones who move differently.
-              <br />
-              Made for your own kind of everyday.
-            </p>
+            <Link className="logo" to="/">{footer.logo ? <img src={footer.logo} alt={footer.logoAlt} width="159" height="111" loading="lazy" /> : footer.logoAlt}</Link>
+            <p>{footer.description}</p>
           </div>
-          <div>
-            <h4>EXPLORE</h4>
-            <Link to="/shop">Shop all</Link>
-            <Link to="/new">New & Featured</Link>
-            <Link to="/shop?category=oversized-tees">T-shirts</Link>
-            <Link to="/shop?category=hoodies">Hoodies</Link>
-          </div>
-          <div>
-            <h4>HERE TO HELP</h4>
-            <Link to="/contact">Contact</Link>
-            <Link to="/track-order">Track your order</Link>
-            <Link to="/shipping-returns">Shipping & returns</Link>
-            <Link to="/size-guide">Size guide</Link>
-            <Link to="/faq">FAQs</Link>
-          </div>
-          <div>
-            <h4>FARMERI WORLD</h4>
-            <Link to="/about">Our story</Link>
-            <Link to="/account">Your account</Link>
-            <Link to="/privacy">Privacy policy</Link>
-            <Link to="/terms">Terms & conditions</Link>
-          </div>
+          {footer.columns.map((column,i) => <div key={i}><h4>{column.title}</h4>{links(column.links)}</div>)}
         </div>
         <div className="footer-bottom">
-          <span>
-            © {new Date().getFullYear()} Farmeri. All rights reserved.
-          </span>
-          <span>INDIA / INR ₹</span>
-          <span>EVERY FIT COUNTS.</span>
+          <span>© {new Date().getFullYear()} {footer.copyright}</span>
+          <span>{footer.market}</span><span>{footer.tagline}</span>
         </div>
       </footer>
       {notice && (

@@ -1,6 +1,8 @@
 import { z } from "zod";
+import { imageUrl } from "./storefront.js";
 export const id = z.string().regex(/^[a-f\d]{24}$/i, "Invalid ID");
 const text = z.string().trim().min(1).max(200);
+export const postalCode = z.string().regex(/^\d{5}$/, "Enter a five-digit Pakistani postal code");
 export const address = z.object({
   name: text,
   phone: z.string().regex(/^\+?[0-9 ()-]{8,18}$/, "Enter a valid phone number"),
@@ -8,8 +10,8 @@ export const address = z.object({
   line2: z.string().max(200).optional().default(""),
   city: text,
   state: text,
-  postalCode: z.string().regex(/^\d{6}$/, "Enter a six-digit Indian PIN"),
-  country: z.literal("India"),
+  postalCode,
+  country: z.literal("Pakistan"),
 });
 export const items = z
   .array(
@@ -58,6 +60,9 @@ export const product = z
       )
       .min(1)
       .max(100),
+    isHero: z.boolean().optional(),
+    isRack: z.boolean().optional(),
+    hangerImage: imageUrl.optional(),
     isFeatured: z.boolean().default(false),
     isNewArrival: z.boolean().default(false),
     isActive: z.boolean().default(true),
@@ -108,6 +113,6 @@ export const siteSettings = z.object({
   shippingFee: z.number().int().min(0),
   taxPercent: z.number().min(0).max(30),
   supportEmail: z.string().email(),
-  serviceablePrefixes: z.array(z.string().regex(/^\d{1,6}$/)).default([]),
+  serviceablePrefixes: z.array(z.string().regex(/^\d{1,5}$/)).default([]),
 });
 export { z };

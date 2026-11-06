@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { Link } from "react-router-dom";
 import {
   motion,
   useScroll,
@@ -8,238 +7,257 @@ import {
 } from "framer-motion";
 import { ArrowUpRight, ArrowLeft, ArrowRight, ArrowDown } from "lucide-react";
 import { useData, DataState, ProductCard, SEO, Newsletter } from "./ui";
+import { ContentLink, useStorefront } from "./storefront";
 import HeroProductCarousel from "./HeroProductCarousel";
+import ClothingRack from "./ClothingRack";
+
+function Action({ button, className }) {
+  return (
+    button?.label && (
+      <ContentLink className={className} href={button.href}>
+        {button.label} <ArrowUpRight size={17} />
+      </ContentLink>
+    )
+  );
+}
+
+function SectionHeading({ copy, children }) {
+  return (
+    <div className="section-heading">
+      <div>
+        <span className="eyebrow">{copy.eyebrow}</span>
+        <h2>{copy.title}</h2>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function ProductSection({ copy, items, id, carousel = false }) {
+  const row = useRef();
+  if (!copy.enabled || !items.length) return null;
+  return (
+    <section className="section" id={id}>
+      <SectionHeading copy={copy}>
+        <div className="row-actions">
+          <Action button={copy.button} />
+          {carousel &&
+            [-1, 1].map((direction) => (
+              <button
+                key={direction}
+                type="button"
+                className="circle"
+                aria-label={
+                  direction < 0 ? "Previous products" : "Next products"
+                }
+                onClick={() =>
+                  row.current?.scrollBy({
+                    left: direction * 340,
+                    behavior: "smooth",
+                  })
+                }
+              >
+                {direction < 0 ? (
+                  <ArrowLeft size={18} />
+                ) : (
+                  <ArrowRight size={18} />
+                )}
+              </button>
+            ))}
+        </div>
+      </SectionHeading>
+      <div className={carousel ? "product-carousel" : "product-grid"} ref={row}>
+        {items.map((p) => (
+          <ProductCard p={p} key={p._id} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Cards({ copy, everyday = false }) {
+  if (!copy.enabled) return null;
+  return (
+    <section className={"section" + (everyday ? " lookbook" : "")}>
+      <SectionHeading copy={copy}>
+        {everyday && <span className="muted">{copy.note}</span>}
+      </SectionHeading>
+      <div className={everyday ? "lookbook-grid" : "category-grid"}>
+        {copy.cards.map(({ label, href, image, tag }, i) => (
+          <ContentLink
+            href={href}
+            key={i}
+            className={everyday ? undefined : "category cat-" + i}
+          >
+            {tag && <span>{tag}</span>}
+            {image && <img src={image} alt={label} loading="lazy" />}
+            {everyday ? (
+              <span>
+                {label} <ArrowUpRight size={17} />
+              </span>
+            ) : (
+              <div>
+                <h3>{label}</h3>
+                <span className="circle">
+                  <ArrowUpRight />
+                </span>
+              </div>
+            )}
+          </ContentLink>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Callout({ copy, id }) {
+  if (!copy.enabled) return null;
+  return (
+    <section className="section home-callout" id={id}>
+      <span className="eyebrow">{copy.eyebrow}</span>
+      <h2>{copy.title}</h2>
+      <p>{copy.description}</p>
+      <Action className="pill" button={copy.button} />
+    </section>
+  );
+}
+
 export default function Home() {
-  const products = useData("featured", "/products/featured?limit=8"),
-    arrivals = useData("arrivals", "/products/new-arrivals?limit=4");
-  const testimonials = useData("testimonials", "/testimonials");
-  const row = useRef(),
-    hero = useRef();
+  const settings = useData("settings", "/settings/public");
+  const { home } = useStorefront();
+  const merchandising = useData("homepageProducts", "/products/homepage");
+  const testimonials = useData(
+    "testimonials",
+    "/testimonials",
+    home.community.enabled,
+  );
+  const hero = useRef();
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: hero,
     offset: ["start start", "end start"],
   });
   const y = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 100]);
+  const h = home.hero;
   return (
     <>
-      <SEO />
+      <SEO title={home.seoTitle} description={home.seoDescription} />
       <section className="hero" ref={hero}>
         <div className="hero-grain" />
         <div className="hero-label">
-          <span>INDEPENDENT STREETWEAR</span>
-          <span>COLLECTION / 026</span>
+          <span>{h.leftLabel}</span>
+          <span>{h.rightLabel}</span>
         </div>
         <div className="hero-heading">
-          <span className="eyebrow">FOR THE ONES WHO NEVER FIT THE MOULD</span>
-          <h1>EVERY FIT COUNTS</h1>
-          <Link className="pill" to="/new">
-            New Arrival <ArrowUpRight size={14} />
-          </Link>
+          <span className="eyebrow">{h.eyebrow}</span>
+          <h1>{settings.data?.headline || "EVERY FIT COUNTS"}</h1>
+          <Action className="pill" button={h.button} />
         </div>
-        <HeroProductCarousel />
-        <div className="originals" aria-hidden="true">
-          ORIGINALS
-        </div>
-        <img className="hero-mountains" src="/assets/hero-mountains.webp" alt="" />
-        <motion.div style={{ y }} className="hero-statue">
-          <img
-            src="/assets/winged-statue.webp"
-            fetchPriority="high"
-            alt="Realistic carved stone angel with raised arms and spread wings"
+        {merchandising.data?.hero?.length > 0 && (
+          <HeroProductCarousel
+            key={merchandising.data.hero.map((p) => p._id).join(",")}
+            products={merchandising.data.hero}
+            hint={h.carouselHint}
           />
-        </motion.div>
-        <img className="clouds" src="/assets/placeholder-clouds.svg" alt="" />
-        <div className="hero-bottom">
-          <span>EVERY FIT COUNTS.</span>
-          <a href="#featured">
-            SCROLL TO EXPLORE <ArrowDown size={14} />
-          </a>
-          <span>EST. 2026</span>
-        </div>
-      </section>
-      <section className="section" id="featured">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">YOUR NEXT EVERYDAY ESSENTIAL</span>
-            <h2>
-              Featured<span className="dot">.</span>
-            </h2>
-          </div>
-          <div className="row-actions">
-            <Link to="/shop">
-              Explore all <ArrowUpRight size={17} />
-            </Link>
-            <button
-              className="circle"
-              aria-label="Previous products"
-              onClick={() =>
-                row.current?.scrollBy({ left: -340, behavior: "smooth" })
-              }
-            >
-              <ArrowLeft size={18} />
-            </button>
-            <button
-              className="circle"
-              aria-label="Next products"
-              onClick={() =>
-                row.current?.scrollBy({ left: 340, behavior: "smooth" })
-              }
-            >
-              <ArrowRight size={18} />
-            </button>
-          </div>
-        </div>
-        <DataState query={products}>
-          {(data) => (
-            <div className="product-carousel" ref={row}>
-              {data.items.map((p) => (
-                <ProductCard p={p} key={p._id} />
-              ))}
-            </div>
-          )}
-        </DataState>
-      </section>
-      <div className="ticker" aria-hidden="true">
-        EVERY FIT COUNTS <span>✳</span> EVERY FIT COUNTS <span>✳</span>{" "}
-        FARMERI ORIGINALS <span>✳</span> EVERY FIT COUNTS
-      </div>
-      <section className="section">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">NO RULES. JUST YOU.</span>
-            <h2>Find your fit.</h2>
-          </div>
-        </div>
-        <div className="category-grid">
-          {[
-            ["T-shirts", "/shop?category=oversized-tees", "farmeri-maroon-tee-front.webp"],
-            ["Hoodies", "/shop?category=hoodies", "tribal-skull-hoodie-front.webp"],
-          ].map(([name, to, img], i) => (
-            <Link to={to} key={name} className={"category cat-" + i}>
-              <span>0{i + 1} / EXPLORE</span>
-              <img
-                src={"/assets/" + img}
-                loading="lazy"
-                alt={
-                  name === "Accessories"
-                    ? "Farmeri collection illustration"
-                    : name + " collection"
-                }
-              />
-              <div>
-                <h3>{name}</h3>
-                <span className="circle">
-                  <ArrowUpRight />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-      <section className="statement">
-        <span className="eyebrow">MORE THAN WHAT YOU WEAR</span>
-        <h2>
-          Not made to fit in.
-          <br />
-          <em>Made to feel like you.</em>
-        </h2>
-        <p>
-          For the quiet rebels. The restless creatives. The ones writing their
-          own story. This is your space.
-        </p>
-        <Link className="pill" to="/about">
-          The Farmeri story <ArrowUpRight size={16} />
-        </Link>
-        <span className="statement-mark" aria-hidden="true">
-          <img src="/assets/farmeri-logo.jpg" alt="" loading="lazy" />
-        </span>
-      </section>
-      <section className="section">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">FRESH OUT OF THE STUDIO</span>
-            <h2>New arrivals.</h2>
-          </div>
-          <Link to="/new">
-            View the drop <ArrowUpRight size={17} />
-          </Link>
-        </div>
-        <DataState query={arrivals}>
-          {(data) => (
-            <div className="product-grid">
-              {data.items.map((p) => (
-                <ProductCard p={p} key={p._id} />
-              ))}
-            </div>
-          )}
-        </DataState>
-      </section>
-      <section className="lookbook section">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">FARMERI / IN THE WILD</span>
-            <h2>The everyday edit.</h2>
-          </div>
-          <span className="muted">STUDIO LOOKBOOK — VOL. 01</span>
-        </div>
-        <div className="lookbook-grid">
-          {[
-            "rick-and-morty-hoodie-front.webp",
-            "authority-graphic-tee-front.webp",
-            "pink-graphic-hoodie-front.webp",
-          ].map((img, i) => (
-            <Link to="/shop" key={img}>
-              <img src={"/assets/" + img} alt={"Studio look " + (i + 1)} loading="lazy" />
-              <span>
-                LOOK 0{i + 1} <ArrowUpRight size={17} />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-      <section className="values">
-        <div>
-          <span>01</span>
-          <h3>Your fit. Your rules.</h3>
-          <p>Relaxed silhouettes, everyday expression.</p>
-        </div>
-        <div>
-          <span>02</span>
-          <h3>Details that matter.</h3>
-          <p>Explore fabric and care on every product.</p>
-        </div>
-        <div>
-          <span>03</span>
-          <h3>Here for your journey.</h3>
-          <p>Need help? Talk to the Farmeri team.</p>
-        </div>
-      </section>
-      <section className="section community">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">WORN YOUR WAY</span>
-            <h2>From our community.</h2>
-          </div>
-        </div>
-        {testimonials.data?.length ? (
-          <div className="values">
-            {testimonials.data.map((r) => (
-              <article className="panel" key={r._id}>
-                <small>{r.rating}/5 · VERIFIED PURCHASE</small>
-                <h3>{r.title}</h3>
-                <p>“{r.comment}”</p>
-                <strong>{r.name.split(" ")[0]}</strong>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <p className="muted">
-            A new chapter. Verified customer stories will appear here after our
-            first deliveries.
-          </p>
         )}
+        <div className="originals" aria-hidden="true">
+          {h.originals}
+        </div>
+        {h.mountains && (
+          <img className="hero-mountains" src={h.mountains} alt="" />
+        )}
+        {h.statue && (
+          <motion.div style={{ y }} className="hero-statue">
+            <img src={h.statue} fetchPriority="high" alt="" />
+          </motion.div>
+        )}
+        {h.clouds && <img className="clouds" src={h.clouds} alt="" />}
+        <div className="hero-bottom">
+          <span>{h.footerLeft}</span>
+          <a href={home.rack.enabled ? "#rack" : "#homepage-products"}>
+            {h.scrollLabel} <ArrowDown size={14} />
+          </a>
+          <span>{h.footerRight}</span>
+        </div>
       </section>
+      <div id="homepage-products">
+        <DataState query={merchandising}>
+          {({ rack, featured, newDrops }) => (
+            <>
+              {home.rack.enabled && (
+                <ClothingRack products={rack} copy={home.rack} />
+              )}
+              <ProductSection
+                copy={home.featured}
+                items={featured.slice(0, 8)}
+                id="featured"
+                carousel
+              />
+              <Callout copy={home.fit} id="find-your-fit" />
+              <Cards copy={home.collections} />
+              <ProductSection
+                copy={home.featuredProducts}
+                items={featured}
+                id="featured-products"
+              />
+              <ProductSection
+                copy={home.newDrops}
+                items={newDrops}
+                id="new-drops"
+              />
+              <Cards copy={home.everyday} everyday />
+              <Callout copy={home.contact} id="home-contact" />
+            </>
+          )}
+        </DataState>
+      </div>
+      {home.statement.enabled && (
+        <section className="statement">
+          <span className="eyebrow">{home.statement.eyebrow}</span>
+          <h2>
+            {home.statement.title}
+            <br />
+            <em>{home.statement.emphasis}</em>
+          </h2>
+          <p>{home.statement.description}</p>
+          <Action button={home.statement.button} className="pill" />
+          {home.statement.image && (
+            <span className="statement-mark" aria-hidden="true">
+              <img src={home.statement.image} alt="" loading="lazy" />
+            </span>
+          )}
+        </section>
+      )}
+      {home.values.enabled && (
+        <section className="values">
+          {home.values.cards.map(({ title, text }, i) => (
+            <div key={i}>
+              <span>{String(i + 1).padStart(2, "0")}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          ))}
+        </section>
+      )}
+      {home.community.enabled && (
+        <section className="section community">
+          <SectionHeading copy={home.community} />
+          {testimonials.data?.length ? (
+            <div className="values">
+              {testimonials.data.map((r) => (
+                <article className="panel" key={r._id}>
+                  <small>{r.rating}/5 · VERIFIED PURCHASE</small>
+                  <h3>{r.title}</h3>
+                  <p>“{r.comment}”</p>
+                  <strong>{r.name.split(" ")[0]}</strong>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="muted">{home.community.emptyText}</p>
+          )}
+        </section>
+      )}
       <Newsletter />
     </>
   );

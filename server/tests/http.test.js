@@ -88,3 +88,111 @@ describe("HTTP validation and authentication (database methods stubbed)", () => 
     expect(() => razor()).toThrow("Online payment is not configured");
   });
 });
+
+describe("Homepage merchandising and storefront editing", () => {
+  const adminId = "507f1f77bcf86cd799439021";
+  const productId = "507f1f77bcf86cd799439022";
+  async function adminToken(role = "admin") {
+    const { default: jwt } = await import("jsonwebtoken");
+    jest.spyOn(User, "findById").mockResolvedValue({ _id: adminId, role });
+    return "Bearer " + jwt.sign({ sub: adminId }, process.env.JWT_SECRET);
+  }
+
+  test("publishes only active products explicitly selected for each section", async () => {
+    const rows = [
+      { _id: productId, isActive: true, isRack: true, isFeatured: true },
+      { _id: "507f1f77bcf86cd799439023", isActive: false, isHero: true },
+      {
+        _id: "507f1f77bcf86cd799439024",
+        isActive: true,
+        isHero: true,
+        isNewArrival: true,
+      },
+    ];
+    jest.spyOn(Product, "find").mockImplementation((filter) => ({
+      sort: () => ({
+        lean: async () =>
+          rows.filter((p) =>
+            Object.entries(filter).every(([k, v]) => p[k] === v),
+          ),
+      }),
+    }));
+    const { status, body } = await api.get("/api/v1/products/homepage");
+    expect(status).toBe(200);
+    expect(body.data).toMatchObject({
+      hero: [rows[2]],
+      rack: [rows[0]],
+      featured: [rows[0]],
+      newDrops: [rows[2]],
+    });
+  });
+
+  test("adding to Rack updates only the selected product's Rack flag", async () => {
+    const auth = await adminToken();
+    const update = jest.spyOn(Product, "findOneAndUpdate").mockReturnValue({
+      select: async () => ({ _id: productId, isRack: true }),
+    });
+    const r = await api
+      .patch("/api/v1/admin/rack/" + productId)
+      .set("Authorization", auth)
+      .send({ isRack: true, isHero: true });
+    expect(r.status).toBe(200);
+    expect(update).toHaveBeenCalledWith(
+      { _id: productId, isActive: true },
+      { $set: { isRack: true } },
+      { new: true },
+    );
+  });
+
+  test("persists editable storefront content and blocks unsafe links", async () => {
+    const { Settings } = await import("../src/models.js");
+    const auth = await adminToken();
+    let saved;
+    jest
+      .spyOn(Settings, "updateOne")
+      .mockImplementation(async (_filter, write) => {
+        saved = write.$set.storefront;
+      });
+    jest.spyOn(Settings, "findOneAndUpdate").mockImplementation(async () => ({
+      toObject: () => ({ storefront: saved }),
+    }));
+    const update = (payload) =>
+      api
+        .put("/api/v1/admin/storefront")
+        .set("Authorization", auth)
+        .send(payload);
+    expect(
+      (
+        await update({
+          navigation: {
+            links: [{ label: "Invalid", href: "javascript:alert(1)" }],
+          },
+        })
+      ).status,
+    ).toBe(400);
+    expect(
+      (
+        await update({
+          navigation: { links: [] },
+          footer: { market: "PKR • PAKISTAN" },
+        })
+      ).status,
+    ).toBe(200);
+    const read = await api.get("/api/v1/settings/public");
+    expect(read.body.data.storefront.navigation.links).toEqual([]);
+    expect(read.body.data.storefront.footer.market).toBe("PKR • PAKISTAN");
+    expect(read.body.data.storefront.home.rack.title).toBe("The Rack.");
+  });
+
+  test("accepts Pakistani postal codes and rejects six-digit codes", async () => {
+    const { Settings } = await import("../src/models.js");
+    jest
+      .spyOn(Settings, "findOneAndUpdate")
+      .mockResolvedValue({ serviceablePrefixes: ["75"] });
+    const shipping = (postalCode) =>
+      api.post("/api/v1/shipping/check").send({ postalCode });
+    expect((await shipping("75500")).body.data.available).toBe(true);
+    expect((await shipping("44000")).body.data.available).toBe(false);
+    expect((await shipping("400001")).status).toBe(400);
+  });
+});

@@ -303,7 +303,7 @@ export function Account() {
                             <td>
                               {new Date(o.createdAt).toLocaleDateString()}
                             </td>
-                            <td>{money(o.total)}</td>
+                            <td>{money(o.total, o.currency)}</td>
                             <td>
                               <span className="badge">{o.status}</span>
                             </td>

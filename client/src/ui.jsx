@@ -1,3 +1,4 @@
+import { ContentLink, useStorefront } from "./storefront";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -188,7 +189,7 @@ export function ProductCard({ p }) {
       </Link>
       <p>{p.category === "hoodies" ? "Relaxed Hoodie" : "Oversized Tshirt"}</p>
       <div className="price">
-        MRP : ₹{((p.discountPrice || p.price) / 100).toFixed(2)}{" "}
+        MRP: {money(p.discountPrice || p.price)}{" "}
         {p.discountPrice && <del>{money(p.price)}</del>}
       </div>
       {quick && (
@@ -222,6 +223,7 @@ export function Field({ label, name, type = "text", ...props }) {
   );
 }
 export function AddressFields() {
+  const { checkout } = useStorefront();
   return (
     <>
       <Field label="Full name" name="name" autoComplete="name" required />
@@ -245,15 +247,16 @@ export function AddressFields() {
       />
       <div className="form-grid">
         <Field label="City" name="city" required />
-        <Field label="State" name="state" required />
+        <Field label="Province / territory" name="state" required />
         <Field
-          label="PIN code"
+          label="Postal code"
           name="postalCode"
           inputMode="numeric"
-          pattern="[0-9]{6}"
+          pattern="[0-9]{5}"
           required
         />
-        <Field label="Country" name="country" value="India" readOnly />
+        <label className="field"><span>Country</span><input value={checkout.countryLabel} readOnly /></label>
+        <input type="hidden" name="country" value="Pakistan" />
       </div>
     </>
   );
@@ -266,7 +269,7 @@ export function Summary({ data }) {
           <span>{k}</span>
           <strong>
             {k === "discount" && data[k] > 0 ? "-" : ""}
-            {money(data[k])}
+            {money(data[k], data.currency)}
           </strong>
         </div>
       ))}
@@ -275,16 +278,14 @@ export function Summary({ data }) {
 }
 export function Newsletter() {
   const [busy, setBusy] = useState(false);
+  const { newsletter } = useStorefront();
+  if (!newsletter.enabled) return null;
   return (
     <section className="newsletter">
       <div>
-        <span className="eyebrow">THE INNER CIRCLE</span>
-        <h2>
-          Good things.
-          <br />
-          No noise.
-        </h2>
-        <p>New drops, studio notes and first access. In your inbox.</p>
+        <span className="eyebrow">{newsletter.eyebrow}</span>
+        <h2 className="studio-multiline">{newsletter.title}</h2>
+        <p>{newsletter.description}</p>
       </div>
       <form
         onSubmit={async (e) => {
@@ -311,15 +312,15 @@ export function Newsletter() {
           id="newsletter"
           type="email"
           name="email"
-          placeholder="Your email address"
+          placeholder={newsletter.placeholder}
           required
         />
         <button aria-label="Join newsletter" disabled={busy}>
           <ArrowUpRight />
         </button>
         <small>
-          By subscribing, you agree to our{" "}
-          <Link to="/privacy">Privacy Policy</Link>.
+          {newsletter.consent}{" "}
+          <ContentLink href={newsletter.policy.href}>{newsletter.policy.label}</ContentLink>.
         </small>
       </form>
     </section>

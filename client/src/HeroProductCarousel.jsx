@@ -1,16 +1,16 @@
+import { garmentImage } from "./product_images";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
-import { collection } from "./collection";
 
-const products = collection.filter(({ category }) => category === "oversized-tees");
+
 const holdMs = 2000;
-const wrap = (value) => ((value % products.length) + products.length) % products.length;
-const distanceFrom = (index, position) => wrap(index - position + products.length / 2) - products.length / 2;
+const wrap = (value, count) => ((value % count) + count) % count;
+const distanceFrom = (index, position, count) => wrap(index - position + count / 2, count) - count / 2;
 
-function Tee({ product, index, position, spacing, mobile, active }) {
-  const distance = useTransform(position, (value) => distanceFrom(index, value));
+function Tee({ product, index, position, spacing, mobile, active, count }) {
+  const distance = useTransform(position, (value) => distanceFrom(index, value, count));
   const x = useTransform(distance, (value) => value * spacing);
   const y = useTransform(distance, (value) => Math.min(Math.abs(value), 2) * 12 - 9);
   const scale = useTransform(distance, (value) => {
@@ -19,24 +19,25 @@ function Tee({ product, index, position, spacing, mobile, active }) {
   });
   const opacity = useTransform(distance, (value) => {
     const d = Math.abs(value);
-    const start = mobile ? 1.12 : 2.02;
-    const end = mobile ? 1.68 : 2.48;
+    const end = Math.min(mobile ? 1.68 : 2.48, count / 2);
+    const start = Math.min(mobile ? 1.12 : 2.02, end - .2);
     return d < start ? 1 - Math.min(d, 1) * .18 : Math.max(0, .82 * (end - d) / (end - start));
   });
-  const visibility = useTransform(distance, (value) => Math.abs(value) >= (mobile ? 1.68 : 2.48) ? "hidden" : "visible");
+  const visibility = useTransform(distance, (value) => Math.abs(value) >= Math.min(mobile ? 1.68 : 2.48, count / 2) ? "hidden" : "visible");
   const zIndex = useTransform(distance, (value) => 30 - Math.round(Math.abs(value) * 8));
 
   return (
     <motion.div className="hero-tee-card" data-active={active} style={{ x, y, scale, opacity, visibility, zIndex }}>
       <Link to={"/product/" + product.slug} tabIndex={active ? 0 : -1}
         aria-label={"View " + product.name} draggable={false}>
-        <img src={"/assets/hero-tees/" + product.slug + ".webp"} alt={product.name} draggable={false} />
+        <img src={garmentImage(product)} alt={product.name} draggable={false} loading={active ? "eager" : "lazy"} />
       </Link>
     </motion.div>
   );
 }
 
-export default function HeroProductCarousel() {
+export default function HeroProductCarousel({ products, hint }) {
+  const count = products.length;
   const stage = useRef(null);
   const gesture = useRef(null);
   const suppressClickUntil = useRef(0);
@@ -78,8 +79,8 @@ export default function HeroProductCarousel() {
   const goTo = useCallback((target) => {
     animation.current?.stop();
     const settle = () => {
-      position.set(wrap(target));
-      setActive(wrap(target));
+      position.set(wrap(target, count));
+      setActive(wrap(target, count));
       setMoving(false);
     };
     if (reduced || Math.abs(position.get() - target) < .001) {
@@ -92,18 +93,18 @@ export default function HeroProductCarousel() {
       ease: [.22, .65, .32, 1],
       onComplete: settle,
     });
-  }, [position, reduced]);
+  }, [position, reduced, count]);
 
   const advance = useCallback((direction) => goTo(Math.round(position.get()) + direction), [goTo, position]);
 
   useEffect(() => {
-    if (moving || pointerHeld || paused || keyboardFocus || reduced || !inView || !pageVisible) return;
+    if (count < 2 || moving || pointerHeld || paused || keyboardFocus || reduced || !inView || !pageVisible) return;
     const timer = window.setTimeout(() => advance(1), holdMs);
     return () => window.clearTimeout(timer);
-  }, [active, advance, moving, pointerHeld, paused, keyboardFocus, reduced, inView, pageVisible]);
+  }, [count, active, advance, moving, pointerHeld, paused, keyboardFocus, reduced, inView, pageVisible]);
 
   function pointerDown(event) {
-    if (event.button !== 0 || !event.isPrimary || gesture.current) return;
+    if (count < 2 || event.button !== 0 || !event.isPrimary || gesture.current) return;
     gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, start: position.get(), dragging: false };
     setPointerHeld(true);
   }
@@ -142,7 +143,7 @@ export default function HeroProductCarousel() {
   }
 
   return (
-    <section className="hero-product-carousel tee-carousel" aria-label="Explore Farmeri T-shirts" aria-roledescription="carousel"
+    <section className="hero-product-carousel tee-carousel" aria-label="Explore Farmeri products" aria-roledescription="carousel"
       onFocusCapture={(event) => setKeyboardFocus(event.target.matches(":focus-visible"))}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setKeyboardFocus(false); }}>
       <div ref={stage} className={"hero-tee-stage" + (dragging ? " is-dragging" : "")}
@@ -159,15 +160,15 @@ export default function HeroProductCarousel() {
           }
         }}>
         {products.map((product, index) => <Tee key={product.slug} product={product} index={index}
-          position={position} spacing={layout.spacing} mobile={layout.mobile} active={active === index} />)}
+          position={position} spacing={layout.spacing} mobile={layout.mobile} count={count} active={active === index} />)}
       </div>
       <div className="hero-carousel-tools">
-        <button type="button" className="circle" aria-label="Previous T-shirt" onClick={() => advance(-1)}><ArrowLeft size={16} /></button>
+        <button type="button" className="circle" disabled={count < 2} aria-label="Previous product" onClick={() => advance(-1)}><ArrowLeft size={16} /></button>
         <span aria-live={paused || reduced ? "polite" : "off"}>
-          <strong>{products[active].name}</strong><small>SWIPE OR TAP TO VIEW</small>
+          <strong>{products[active].name}</strong><small>{hint}</small>
         </span>
-        <button type="button" className="circle" aria-label="Next T-shirt" onClick={() => advance(1)}><ArrowRight size={16} /></button>
-        {!reduced && <button type="button" className="circle hero-tee-pause"
+        <button type="button" className="circle" disabled={count < 2} aria-label="Next product" onClick={() => advance(1)}><ArrowRight size={16} /></button>
+        {count > 1 && !reduced && <button type="button" className="circle hero-tee-pause"
           aria-label={paused ? "Resume autoplay" : "Pause autoplay"} onClick={() => setPaused((value) => !value)}>
           {paused ? <Play size={13} /> : <Pause size={13} />}
         </button>}

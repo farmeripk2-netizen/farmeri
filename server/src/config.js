@@ -7,7 +7,7 @@ export const config = {
   origin: process.env.CLIENT_URL || "http://localhost:5173",
   secret: process.env.JWT_SECRET,
   production: process.env.NODE_ENV === "production",
-  currency: "INR",
+  currency: "PKR",
 };
 export function checkConfig() {
   if (!config.secret || config.secret.length < 32)

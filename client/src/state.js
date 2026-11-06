@@ -172,9 +172,9 @@ export async function restoreSession() {
     useSession.getState().setSession(null);
   }
 }
-export const money = (value) =>
-  new Intl.NumberFormat("en-IN", {
+export const money = (value, currency = "PKR") =>
+  new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-PK", {
     style: "currency",
-    currency: "INR",
+    currency,
     minimumFractionDigits: 2,
   }).format((value || 0) / 100);

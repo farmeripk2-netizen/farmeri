@@ -14,3 +14,11 @@ export function normalizeProductImages(value) {
     return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, normalizeProductImages(item)]));
   return value;
 }
+
+const cropped = new Set(["authority-graphic-tee", "born-to-die-graphic-tee", "dragon-graphic-tee", "farmeri-maroon-tee", "scarface-graphic-tee", "spider-white-tee"]);
+export function garmentImage(product) {
+  if (product.hangerImage) return product.hangerImage;
+  const front = productImage(product.images?.[0]);
+  return cropped.has(product.slug) && front === "/assets/" + product.slug + "-front.webp"
+    ? "/assets/hero-tees/" + product.slug + ".webp" : front;
+}

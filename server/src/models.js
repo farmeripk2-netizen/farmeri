@@ -68,6 +68,9 @@ export const Product = make(
         stock: { type: Number, min: 0, default: 0 },
       },
     ],
+    isHero: Boolean,
+    isRack: Boolean,
+    hangerImage: String,
     isFeatured: Boolean,
     isNewArrival: Boolean,
     isActive: { type: Boolean, default: true },
@@ -172,10 +175,11 @@ export const Subscriber = make("Subscriber", {
 });
 export const Settings = make("Settings", {
   key: { type: String, unique: true, default: "site" },
+  storefront: Schema.Types.Mixed,
   headline: { type: String, default: "EVERY FIT COUNTS" },
   announcement: {
     type: String,
-    default: "FREE SHIPPING ON ORDERS OVER ₹1,999",
+    default: "FREE SHIPPING ON ORDERS OVER PKR 1,999",
   },
   announcementEnabled: { type: Boolean, default: true },
   shippingThreshold: { type: Number, default: 199900 },

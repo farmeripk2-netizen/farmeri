@@ -6,7 +6,7 @@ A locally developed React/Express/MongoDB store with a dark teal streetwear inte
 
 Application source is included for storefront, account, admin, backend, integrations and deployment configuration. **This is a local development build, not a deployed or production-certified store.** Supplied Farmeri logo, product photography and reference-video visual update are now included. See docs/FARMERI-VISUAL-UPDATE.md for the required catalog refresh command, provisional inventory details and validation limits. Draft policies still need owner review.
 
-Currency: **INR**. Country: **India**. Payments: **COD + Razorpay**, as specified in the supplied brief. These are not inherited from Dussu. Node 24 is used instead of the brief's end-of-life Node 20. React 18 and React Router 6 are retained.
+Currency: **PKR**. Country: **Pakistan**. New checkout uses **Cash on Delivery**. For product placements and the storefront editor, see [Rack and Storefront](docs/RACK-AND-STOREFRONT.md). Node 24 is used instead of the brief's end-of-life Node 20. React 18 and React Router 6 are retained.
 
 Read `docs/TEST-RESULTS.md` for actual verification and limitations.
 
@@ -14,7 +14,7 @@ Read `docs/TEST-RESULTS.md` for actual verification and limitations.
 
 - Node.js 24 LTS (Node 22 supported), npm.
 - MongoDB 7+ replica set, or an Atlas development cluster. Transactions are required for checkout; a standalone MongoDB instance is insufficient.
-- Optional integrations: Cloudinary, SMTP, Razorpay test account.
+- Optional integrations: Cloudinary and SMTP.
 
 ## 2. Install (Windows PowerShell)
 
@@ -93,9 +93,9 @@ Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`. Messages ar
 
 Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`. Admin → Products supports JPEG/PNG/WebP upload, 8 MiB per image, up to ten per request. Multiple uploads allow up to twenty URLs on a product. Credentials remain on the server.
 
-### Razorpay
+### Historical Razorpay orders
 
-Set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`. Use test keys first. Without credentials the checkout shows online payment as unavailable and COD stays usable. The backend creates the provider order, verifies the callback signature, fetches payment capture state and handles signed `payment.captured` webhooks. Orders reserve stock for 30 minutes by deducting it transactionally; expiry releases it. A payment captured after release is flagged `refund_required`, not fulfilled. Refunds are performed manually in the provider dashboard and documented in admin refund notes.
+New checkout uses Cash on Delivery. Existing Razorpay orders retain their previous currency and provider handling. Keep existing Razorpay credentials only if historical orders still need reconciliation or refunds.
 
 ## 6. Project map
 
@@ -132,10 +132,8 @@ Production frontend output: `client/dist`. Full setup and deployment instruction
 
 ## Known launch requirements
 
-- Confirm whether Farmeri actually targets India/INR or needs Pakistan/PKR and different payment/address rules.
-- Supply the original design video and final artwork for visual matching.
 - Replace all sample garment measurements, draft policy text and demo product specifications.
-- Configure and test SMTP, Cloudinary and Razorpay test/live accounts.
+- Configure and test SMTP and Cloudinary accounts.
 - Run the full integration suite and manual QA on a machine with MongoDB permissions.
 - Approve final content and complete hosted-domain checks before accepting customers.
 - No fabricated customer testimonials are included. The homepage community section displays approved verified reviews when available.

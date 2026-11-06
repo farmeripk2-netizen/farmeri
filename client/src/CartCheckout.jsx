@@ -1,3 +1,4 @@
+import { useStorefront } from "./storefront";
 import { productImage } from "./product_images";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -102,14 +103,14 @@ export function Cart() {
         <aside className="panel order-summary">
           <h2>The details.</h2>
           <p>
-            {subtotal >= (settings.data?.shippingThreshold || 199900)
+            {subtotal >= (settings.data?.shippingThreshold ?? 199900)
               ? "Your bag qualifies for free shipping."
-              : money((settings.data?.shippingThreshold || 199900) - subtotal) +
+              : money((settings.data?.shippingThreshold ?? 199900) - subtotal) +
                 " away from free shipping."}
           </p>
           <progress
             value={subtotal}
-            max={settings.data?.shippingThreshold || 199900}
+            max={Math.max(1, settings.data?.shippingThreshold ?? 199900)}
           />
           <form
             className="inline-form"
@@ -161,6 +162,7 @@ export function Cart() {
   );
 }
 export function Checkout() {
+  const { checkout: copy } = useStorefront();
   const cart = useCart(),
     user = useSession((s) => s.user),
     navigate = useNavigate();
@@ -169,8 +171,7 @@ export function Checkout() {
     [error, setError] = useState("");
   const key = useRef(crypto.randomUUID());
   const formRef = useRef();
-  const settings = useData("settings", "/settings/public"),
-    addresses = useData("addresses", "/users/me/addresses", !!user);
+  const addresses = useData("addresses", "/users/me/addresses", !!user);
   useEffect(() => {
     setQuote(null);
     key.current = crypto.randomUUID();
@@ -228,10 +229,10 @@ export function Checkout() {
   return (
     <div className="section">
       <SEO title="Checkout" />
-      <PageHead title="Make it yours." eyebrow="FARMERI / SECURE CHECKOUT" />
+      <PageHead title={copy.title} eyebrow={copy.eyebrow} />
       <form ref={formRef} onSubmit={submit} className="checkout-layout">
         <div className="form panel">
-          <h2>Contact & delivery</h2>
+          <h2>{copy.deliveryHeading}</h2>
           {!user && (
             <p>
               Have an account? <Link to="/login">Sign in</Link> or continue as a
@@ -246,7 +247,7 @@ export function Checkout() {
             readOnly={!!user}
             required
           />
-          {addresses.data?.length > 0 && (
+          {addresses.data?.some((a) => a.country === "Pakistan") && (
             <label>
               Use saved address
               <select
@@ -257,12 +258,12 @@ export function Checkout() {
                   );
                   if (a)
                     for (const [k, v] of Object.entries(a))
-                      if (formRef.current.elements[k])
+                      if (k !== "country" && formRef.current.elements[k])
                         formRef.current.elements[k].value = v;
                 }}
               >
                 <option value="">New address</option>
-                {addresses.data.map((a) => (
+                {addresses.data.filter((a) => a.country === "Pakistan").map((a) => (
                   <option key={a._id} value={a._id}>
                     {a.name} — {a.line1}
                   </option>
@@ -271,9 +272,9 @@ export function Checkout() {
             </label>
           )}
           <AddressFields />
-          <h2>Shipping</h2>
-          <p>Standard delivery · 4–7 business days (sample estimate)</p>
-          <h2>Payment</h2>
+          <h2>{copy.shippingHeading}</h2>
+          <p>{copy.deliveryNote}</p>
+          <h2>{copy.paymentHeading}</h2>
           <label className="radio">
             <input
               type="radio"
@@ -281,19 +282,7 @@ export function Checkout() {
               value="cod"
               defaultChecked
             />{" "}
-            Cash on Delivery
-          </label>
-          <label className="radio">
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="razorpay"
-              disabled={!settings.data?.onlinePaymentsEnabled}
-            />{" "}
-            Pay securely with Razorpay{" "}
-            {!settings.data?.onlinePaymentsEnabled && (
-              <small>Not configured</small>
-            )}
+            {copy.paymentLabel}
           </label>
           <label className="check">
             <input type="checkbox" required /> I agree to the{" "}
@@ -302,7 +291,7 @@ export function Checkout() {
           </label>
         </div>
         <aside className="panel order-summary">
-          <h2>Your order</h2>
+          <h2>{copy.summaryHeading}</h2>
           {cart.items.map((i) => (
             <div className="mini-item" key={i.sku}>
               <img src={productImage(i.image)} alt="" />
@@ -467,7 +456,7 @@ export function OrderDetail() {
                     {i.size} / {i.color} × {i.qty}
                   </small>
                 </span>
-                <strong>{money(i.price * i.qty)}</strong>
+                <strong>{money(i.price * i.qty, order.currency)}</strong>
               </div>
             ))}
             <Summary data={order} />

@@ -10,13 +10,21 @@ import { MongoMemoryReplSet } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import supertest from "supertest";
 import crypto from "node:crypto";
+import jwt from "jsonwebtoken";
 process.env.JWT_SECRET = "integration-only-secret-with-at-least-32-characters";
 process.env.NODE_ENV = "test";
 let repl, app, M, api, user, token, product, cookie, order;
 jest.setTimeout(180000);
 beforeAll(async () => {
   repl = await MongoMemoryReplSet.create({
-    replSet: { count: 1 },
+    replSet: {
+      count: 1,
+      args: [
+        "--nounixsocket",
+        "--setParameter",
+        "diagnosticDataCollectionEnabled=false",
+      ],
+    },
     binary: { version: "7.0.14" },
   });
   await mongoose.connect(repl.getUri());
@@ -47,12 +55,12 @@ afterAll(async () => {
 });
 const address = {
   name: "Test Buyer",
-  phone: "+919876543210",
+  phone: "+923001234567",
   line1: "12 Example Street",
-  city: "Mumbai",
-  state: "Maharashtra",
-  postalCode: "400001",
-  country: "India",
+  city: "Karachi",
+  state: "Sindh",
+  postalCode: "75500",
+  country: "Pakistan",
 };
 const payload = () => ({
   items: [{ product: String(product._id), sku: "TEST-M", qty: 1 }],
@@ -62,14 +70,12 @@ const payload = () => ({
 });
 describe("Connected API flows", () => {
   test("registers a customer and rejects role escalation", async () => {
-    const r = await api
-      .post("/api/v1/auth/register")
-      .send({
-        name: "Test Buyer",
-        email: "buyer@example.com",
-        password: "MyLongPassword123!",
-        role: "admin",
-      });
+    const r = await api.post("/api/v1/auth/register").send({
+      name: "Test Buyer",
+      email: "buyer@example.com",
+      password: "MyLongPassword123!",
+      role: "admin",
+    });
     expect(r.status).toBe(201);
     user = r.body.data.user;
     token = r.body.data.accessToken;
@@ -203,5 +209,65 @@ describe("Connected API flows", () => {
     await updateStatus(order._id, { status: "Cancelled" });
     await updateStatus(order._id, { status: "Cancelled" });
     expect((await M.Product.findById(product._id)).variants[0].stock).toBe(1);
+  });
+  test("an admin can place a product, remove it from Rack without deleting it, and publish storefront copy", async () => {
+    const admin = await M.User.create({
+      name: "Test Admin",
+      email: "admin@example.com",
+      passwordHash: "test-only",
+      role: "admin",
+    });
+    const auth =
+      "Bearer " + jwt.sign({ sub: String(admin._id) }, process.env.JWT_SECRET);
+    const payload = {
+      name: "Rack Hoodie",
+      slug: "rack-hoodie",
+      description: "An integration hoodie",
+      category: "hoodies",
+      gender: "unisex",
+      price: 320000,
+      images: ["/assets/test.webp"],
+      variants: [{ sku: "RACK-M", size: "M", color: "Black", stock: 1 }],
+      isHero: true,
+      isRack: true,
+      isNewArrival: true,
+    };
+    const created = await api
+      .post("/api/v1/admin/products")
+      .set("Authorization", auth)
+      .send(payload);
+    expect(created.status).toBe(201);
+    const id = created.body.data._id;
+    const homepage = () => api.get("/api/v1/products/homepage");
+    const sections = (await homepage()).body.data;
+    expect(sections.hero.map((p) => p._id)).toContain(id);
+    expect(sections.rack.map((p) => p._id)).toContain(id);
+    expect(sections.newDrops.map((p) => p._id)).toContain(id);
+    expect(sections.featured.map((p) => p._id)).not.toContain(id);
+    expect(
+      (
+        await api
+          .patch("/api/v1/admin/rack/" + id)
+          .set("Authorization", auth)
+          .send({ isRack: false })
+      ).status,
+    ).toBe(200);
+    const after = (await homepage()).body.data;
+    expect(after.rack.map((p) => p._id)).not.toContain(id);
+    expect(after.hero.map((p) => p._id)).toContain(id);
+    expect(
+      (
+        await api
+          .put("/api/v1/admin/storefront")
+          .set("Authorization", auth)
+          .send({
+            footer: { market: "PKR / PAKISTAN" },
+            home: { rack: { title: "Studio rack" } },
+          })
+      ).status,
+    ).toBe(200);
+    const settings = (await api.get("/api/v1/settings/public")).body.data;
+    expect(settings.storefront.home.rack.title).toBe("Studio rack");
+    expect(settings.storefront.footer.market).toBe("PKR / PAKISTAN");
   });
 });
