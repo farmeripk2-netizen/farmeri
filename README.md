@@ -6,7 +6,7 @@ A locally developed React/Express/MongoDB store with a dark teal streetwear inte
 
 Application source is included for storefront, account, admin, backend, integrations and deployment configuration. **This is a local development build, not a deployed or production-certified store.** Supplied Farmeri logo, product photography and reference-video visual update are now included. See docs/FARMERI-VISUAL-UPDATE.md for the required catalog refresh command, provisional inventory details and validation limits. Draft policies still need owner review.
 
-Currency: **PKR**. Country: **Pakistan**. New checkout uses **Cash on Delivery**. For product placements and the storefront editor, see [Rack and Storefront](docs/RACK-AND-STOREFRONT.md). Node 24 is used instead of the brief's end-of-life Node 20. React 18 and React Router 6 are retained.
+Currency: **PKR**. Country: **Pakistan**. New checkout uses **Cash on Delivery**. For product placements and the storefront editor, see [Rack and Storefront](docs/RACK-AND-STOREFRONT.md). See [Pages and SEO](docs/PAGES-AND-SEO.md) to edit built-in pages and publish new ones. Node 24 is used instead of the brief's end-of-life Node 20. React 18 and React Router 6 are retained.
 
 Read `docs/TEST-RESULTS.md` for actual verification and limitations.
 

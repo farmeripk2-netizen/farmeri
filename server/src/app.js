@@ -1,3 +1,4 @@
+import { builtInPages, builtInView, customView, customPageInput, parseBuiltIn, slugSchema, listPages } from "./pages.js";
 import { storefrontContent, storefrontSchema } from "./storefront.js";
 import express from "express";
 import mongoose from "mongoose";
@@ -514,6 +515,17 @@ api.get(
   "/categories",
   wrap(async (req, res) => ok(res, await M.Category.find({ isActive: true }))),
 );
+api.get("/pages/:slug", wrap(async (req,res) => {
+  const slug = slugSchema.safeParse(req.params.slug);
+  if (!slug.success) throw fail(404,"Page not found");
+  if (Object.hasOwn(builtInPages,slug.data)) {
+    const [site, entry] = await Promise.all([M.settings(), M.Page.findOne({slug:slug.data,builtIn:true}).lean()]);
+    return ok(res,builtInView(slug.data,site,entry));
+  }
+  const page = await M.Page.findOne({slug:slug.data,builtIn:false,published:true}).lean();
+  if (!page) throw fail(404,"Page not found");
+  ok(res,customView(page));
+}));
 api.get(
   "/settings/public",
   wrap(async (req, res) => {
@@ -1106,6 +1118,23 @@ a.patch("/rack/:id", wrap(async (req, res) => {
   if (!product) throw fail(404, "Active product not found");
   ok(res, product);
 }));
+a.get("/pages", wrap(async (_req,res) => ok(res,await listPages())));
+a.post("/pages", wrap(async (req,res) => {
+  const input = customPageInput.parse(req.body);
+  ok(res,customView(await M.Page.create(input)),201);
+}));
+a.put("/pages/:slug", wrap(async (req,res) => {
+  const slug = slugSchema.parse(req.params.slug);
+  if (Object.hasOwn(builtInPages,slug)) {
+    const input = parseBuiltIn(slug,req.body);
+    const page = await M.Page.findOneAndUpdate({slug,builtIn:true}, {$set:input}, {upsert:true,new:true});
+    return ok(res,builtInView(slug,await M.settings(),page.toObject()));
+  }
+  const input = customPageInput.parse({...req.body,slug});
+  const page = await M.Page.findOneAndUpdate({slug,builtIn:false}, {$set:input}, {new:true});
+  if (!page) throw fail(404,"Page not found");
+  ok(res,customView(page));
+}));
 a.get("/storefront", wrap(async (_req, res) => {
   const s = await M.settings();
   ok(res, storefrontContent(s.storefront));
@@ -1168,25 +1197,20 @@ app.get(
       /\/$/,
       "",
     );
-    const products = await M.Product.find({ isActive: true }).select("slug");
+    const [products,pages] = await Promise.all([
+      M.Product.find({ isActive: true }).select("slug"),
+      listPages(),
+    ]);
     const paths = [
-      "",
-      "shop",
-      "new",
-      "men",
-      "women",
-      "about",
-      "contact",
-      "faq",
-      "shipping-returns",
-      "size-guide",
-      ...products.map((p) => "product/" + p.slug),
+      ...pages.filter((p) => p.published && !p.seo.noIndex).map((p) => p.path),
+      ...products.map((p) => "/product/" + p.slug),
     ];
+    const xmlEscape = (value) => value.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
     res
       .type("application/xml")
       .send(
         '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
-          paths.map((p) => `<url><loc>${origin}/${p}</loc></url>`).join("") +
+          paths.map((p) => `<url><loc>${xmlEscape(origin + p)}</loc></url>`).join("") +
           "</urlset>",
       );
   }),

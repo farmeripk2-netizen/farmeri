@@ -58,6 +58,7 @@ function App() {
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<Home />} />
+              <Route path="about-us" element={<Navigate to="/about" replace />} />
               {["shop", "new", "search"].map((path) => (
                 <Route key={path} path={path} element={<Shop />} />
               ))}

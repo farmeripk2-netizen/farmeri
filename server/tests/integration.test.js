@@ -270,4 +270,80 @@ describe("Connected API flows", () => {
     expect(settings.storefront.home.rack.title).toBe("Studio rack");
     expect(settings.storefront.footer.market).toBe("PKR / PAKISTAN");
   });
+  test("manages built-in and custom page content, SEO and publishing", async () => {
+    const admin = await M.User.findOne({ role: "admin" });
+    const auth =
+      "Bearer " + jwt.sign({ sub: String(admin._id) }, process.env.JWT_SECRET);
+    const get = (slug) => api.get("/api/v1/pages/" + slug);
+    const put = (slug, data) =>
+      api
+        .put("/api/v1/admin/pages/" + slug)
+        .set("Authorization", auth)
+        .send(data);
+    expect((await api.get("/api/v1/admin/pages")).status).toBe(401);
+    const listing = await api
+      .get("/api/v1/admin/pages")
+      .set("Authorization", auth);
+    expect(listing.body.data.map((p) => p.label)).toEqual(
+      expect.arrayContaining([
+        "About Us",
+        "Privacy Policy",
+        "Shipping & Returns",
+        "Checkout",
+      ]),
+    );
+    const about = (await get("about")).body.data;
+    expect(
+      (
+        await put("about", {
+          content: { ...about.content, title: "About Farmeri" },
+          seo: {
+            title: "About Us | Farmeri Pakistan",
+            description: "Our story.",
+            keywords: "Farmeri, Pakistan",
+          },
+        })
+      ).status,
+    ).toBe(200);
+    const saved = (await get("about")).body.data;
+    expect(saved.content).toMatchObject({
+      title: "About Farmeri",
+      image: about.content.image,
+    });
+    expect(saved.seo.keywords).toBe("Farmeri, Pakistan");
+    expect(
+      (
+        await put("checkout", {
+          seo: { title: "Farmeri Checkout", noIndex: false },
+        })
+      ).body.data.seo.noIndex,
+    ).toBe(true);
+    const page = {
+      slug: "cotton-care",
+      title: "Cotton Care",
+      sections: [{ title: "Washing", text: "Wash cold." }],
+      seo: { title: "Cotton care by Farmeri" },
+    };
+    const add = (data) =>
+      api.post("/api/v1/admin/pages").set("Authorization", auth).send(data);
+    expect((await add({ ...page, slug: "checkout" })).status).toBe(400);
+    expect((await add(page)).status).toBe(201);
+    expect((await get(page.slug)).status).toBe(404);
+    expect((await put(page.slug, { ...page, published: true })).status).toBe(
+      200,
+    );
+    expect((await get(page.slug)).body.data.sections).toEqual(page.sections);
+    expect((await api.get("/sitemap.xml")).text).toContain(
+      "/cotton-care</loc>",
+    );
+    expect((await api.get("/sitemap.xml")).text).not.toContain(
+      "/checkout</loc>",
+    );
+    await put(page.slug, { ...page, published: true, seo: { noIndex: true } });
+    expect((await api.get("/sitemap.xml")).text).not.toContain(
+      "/cotton-care</loc>",
+    );
+    await put(page.slug, { ...page, published: false });
+    expect((await get(page.slug)).status).toBe(404);
+  });
 });

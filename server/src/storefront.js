@@ -17,7 +17,7 @@ export const imageUrl = z
       (v.startsWith("https://res.cloudinary.com/") && external(v)),
     "Upload an image or use a local asset or Cloudinary URL",
   );
-function schemaFor(example, key) {
+export function schemaFor(example, key) {
   if (Array.isArray(example)) return z.array(schemaFor(example[0])).max(30);
   if (typeof example === "object")
     return z.object(

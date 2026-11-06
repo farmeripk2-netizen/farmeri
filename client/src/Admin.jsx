@@ -1,3 +1,4 @@
+import PageManager from "./PageManager";
 import { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -50,7 +51,7 @@ export default function Admin() {
       await request(path, method, data);
       notify("Saved");
       await refresh();
-      for (const key of ["settings", "homepageProducts", "featured", "arrivals", "products", "categories"]) qc.invalidateQueries({ queryKey: [key] });
+      for (const key of ["settings", "homepageProducts", "featured", "arrivals", "products", "categories", "page"]) qc.invalidateQueries({ queryKey: [key] });
       return true;
     } catch (e) {
       notify(errorText(e));
@@ -62,6 +63,7 @@ export default function Admin() {
     "products",
     "rack",
     "storefront",
+    "pages",
     "categories",
     "orders",
     "customers",
@@ -116,6 +118,7 @@ export default function Admin() {
           )}
           <DataState query={q}>
             {(data) => {
+              if (tab === "pages") return <PageManager pages={data} mutate={mutate} />;
               if (tab === "stats")
                 return (
                   <>

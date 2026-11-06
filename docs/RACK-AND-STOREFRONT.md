@@ -12,7 +12,7 @@ Apply the ZIP at the Farmeri project root. It contains both `client/` and `serve
 
 ## Editable content
 
-- **Admin → Storefront** controls the navbar and mobile menu independently, logo images, footer columns, homepage copy/images/buttons, rack copy, collection and lookbook cards, newsletter, shop headings, About, Contact, size guide, FAQs and policy content.
+- **Admin → Storefront** controls the navbar and mobile menu independently, logo images, footer columns, homepage copy/images/buttons, rack copy, collection and lookbook cards, and newsletter. The [Pages editor](PAGES-AND-SEO.md) manages shop headings, About Us, Contact, size guide, FAQs and policy content.
 - **Admin → Settings** controls the main Hero headline, announcement, shipping fees and threshold, tax, support email and delivery postal code prefixes. Enter amounts in PKR; existing numeric catalog amounts are not converted.
 - Images can be uploaded from the editor when the existing Cloudinary credentials are configured. Existing local assets and Cloudinary links work without uploading a replacement.
 - New checkout uses Pakistan, five-digit postal codes, PKR and Cash on Delivery. Old Indian/Razorpay orders keep their historical currency; new Razorpay checkout is disabled. Check any previous shipping prefixes in Settings and replace them with the Pakistani delivery areas you actually serve.

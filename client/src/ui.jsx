@@ -1,3 +1,4 @@
+import { isBuiltInPage, pathSlug, privatePath, usePage } from "./pages";
 import { ContentLink, useStorefront } from "./storefront";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -22,17 +23,25 @@ export const useData = (key, path, enabled = true) =>
 export function SEO({
   title = "Every Fit Counts",
   description = "Independent spirit. Uncompromising streetwear. Discover Farmeri graphic essentials.",
-  image,
+  keywords, image, noIndex = false, page,
 }) {
-  const loc = useLocation();
-  const url =
-    (import.meta.env.VITE_SITE_URL || window.location.origin) + loc.pathname;
+  const { pathname } = useLocation();
+  const slug = pathSlug(pathname);
+  const managed = usePage(slug, !page && isBuiltInPage(slug));
+  const seo = (page || managed.data)?.seo;
+  const resolvedTitle = seo?.title || title + " | Farmeri";
+  const resolvedDescription = seo?.description || description;
+  const resolvedKeywords = seo?.keywords || keywords;
+  const origin = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/+$/, "");
+  const url = origin + ((page || managed.data)?.path || pathname);
   return (
     <Helmet>
-      <title>{title} | Farmeri</title>
-      <meta name="description" content={description} />
-      <meta property="og:title" content={title + " | Farmeri"} />
-      <meta property="og:description" content={description} />
+      <title>{resolvedTitle}</title>
+      <meta name="description" content={resolvedDescription} />
+      {resolvedKeywords && <meta name="keywords" content={resolvedKeywords} />}
+      <meta name="robots" content={noIndex || privatePath(slug) || seo?.noIndex ? "noindex, follow" : "index, follow"} />
+      <meta property="og:title" content={resolvedTitle} />
+      <meta property="og:description" content={resolvedDescription} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content="website" />
       {image && <meta property="og:image" content={new URL(image, url).href} />}

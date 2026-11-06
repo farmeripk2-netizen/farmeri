@@ -2382,3 +2382,8 @@ footer .footer-top p, .studio-multiline { white-space: pre-line; }
 .rack-preview { scroll-margin-top: 110px; }
 
 .rack-preview p { color: #4d5556; }
+
+.studio-page-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .65rem 0; border-bottom: 1px solid var(--line, #555); }
+.studio-page-row small { display: block; margin-top: .25rem; overflow-wrap: anywhere; }
+.studio-page-row .actions { align-items: center; }
+.managed-page-section { margin: 2rem 0; }

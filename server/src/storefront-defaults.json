@@ -36,7 +36,7 @@
         "href": "/shop"
       },
       {
-        "label": "Our story",
+        "label": "About Us",
         "href": "/about"
       },
       {
@@ -114,7 +114,7 @@
         "title": "FARMERI WORLD",
         "links": [
           {
-            "label": "Our story",
+            "label": "About Us",
             "href": "/about"
           },
           {
@@ -435,6 +435,11 @@
       "newTitle": "The latest drop.",
       "searchLabel": "Search",
       "allProducts": "All products"
+    },
+    "trackOrder": {
+      "title": "Follow your order.",
+      "description": "Enter the order number and email used at checkout.",
+      "submitLabel": "Track order"
     }
   }
 }

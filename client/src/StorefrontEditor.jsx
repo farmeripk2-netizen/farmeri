@@ -4,6 +4,7 @@ import { defaults } from "./storefront";
 import { request, errorText, notify } from "./state";
 
 const names = {
+  content: "Page content",
   href: "Link destination",
   label: "Label",
   enabled: "Show section",
@@ -86,7 +87,14 @@ function ImageField({ label, value, update, busyChange }) {
 }
 export { ImageField };
 
-function Inputs({ field, value, example, change, busyChange, path = [] }) {
+export function Inputs({
+  field,
+  value,
+  example,
+  change,
+  busyChange,
+  path = [],
+}) {
   const label =
     typeof field === "number" ? "Item " + (field + 1) : nameOf(field);
   if (Array.isArray(example)) {
@@ -158,17 +166,22 @@ function Inputs({ field, value, example, change, busyChange, path = [] }) {
     );
   }
   if (typeof example === "object") {
-    const controls = Object.entries(example).map(([k, v]) => (
-      <Inputs
-        key={k}
-        field={k}
-        value={value[k]}
-        example={v}
-        change={change}
-        busyChange={busyChange}
-        path={[...path, k]}
-      />
-    ));
+    const controls = Object.entries(example)
+      .filter(
+        ([k]) =>
+          !(field === "home" && ["seoTitle", "seoDescription"].includes(k)),
+      )
+      .map(([k, v]) => (
+        <Inputs
+          key={k}
+          field={k}
+          value={value[k]}
+          example={v}
+          change={change}
+          busyChange={busyChange}
+          path={[...path, k]}
+        />
+      ));
     if (typeof field === "number" || field === "button" || field === "policy")
       return <div className="form-grid">{controls}</div>;
     return (
@@ -220,7 +233,7 @@ function Inputs({ field, value, example, change, busyChange, path = [] }) {
   );
 }
 
-function updated(value, path, next) {
+export function updated(value, path, next) {
   if (!path.length) return next;
   const [first, ...rest] = path;
   const copy = Array.isArray(value) ? [...value] : { ...value };
@@ -256,17 +269,19 @@ export default function StorefrontEditor({ initial, onSave }) {
         disabled={saving || uploads > 0}
         className="studio-editor-fields"
       >
-        {Object.entries(defaults).map(([field, example]) => (
-          <Inputs
-            key={field}
-            field={field}
-            value={draft[field]}
-            example={example}
-            change={change}
-            busyChange={busyChange}
-            path={[field]}
-          />
-        ))}
+        {Object.entries(defaults)
+          .filter(([field]) => field !== "pages")
+          .map(([field, example]) => (
+            <Inputs
+              key={field}
+              field={field}
+              value={draft[field]}
+              example={example}
+              change={change}
+              busyChange={busyChange}
+              path={[field]}
+            />
+          ))}
       </fieldset>
       <button disabled={saving || uploads > 0}>
         {saving ? "Saving…" : uploads ? "Uploading…" : "Save storefront"}

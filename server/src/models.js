@@ -173,6 +173,16 @@ export const Subscriber = make("Subscriber", {
   email: { type: String, unique: true },
   active: { type: Boolean, default: true },
 });
+export const Page = make("Page", {
+  slug: { type: String, required: true, unique: true },
+  builtIn: { type: Boolean, default: false },
+  title: String,
+  intro: String,
+  content: Schema.Types.Mixed,
+  sections: [{ _id: false, title: String, text: String }],
+  published: { type: Boolean, default: false },
+  seo: { title: String, description: String, keywords: String, noIndex: Boolean },
+});
 export const Settings = make("Settings", {
   key: { type: String, unique: true, default: "site" },
   storefront: Schema.Types.Mixed,

@@ -53,6 +53,7 @@ function Detail({ p }) {
       <SEO
         title={p.seo?.title || p.name}
         description={p.seo?.description || p.description}
+        keywords={p.seo?.keywords}
         image={p.images[0]}
       />
       <div className="breadcrumbs">

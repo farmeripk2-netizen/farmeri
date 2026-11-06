@@ -1,12 +1,16 @@
+import { usePage } from "./pages";
 import { useStorefront } from "./storefront";
 import { useState } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useData, DataState, ProductCard, PageHead, SEO, Empty } from "./ui";
 export default function Shop() {
-  const { pages: { shop: copy } } = useStorefront();
+  const { pages: { shop: fallback } } = useStorefront();
   const [params, setParams] = useSearchParams();
   const { pathname } = useLocation();
+  const shopPage = usePage("shop");
+  const dropPage = usePage("new", pathname === "/new");
+  const copy = shopPage.data?.content || fallback;
   const [filters, setFilters] = useState(false);
   const query = new URLSearchParams(params);
 
@@ -20,7 +24,7 @@ export default function Shop() {
     pathname === "/search"
       ? copy.searchLabel + ": " + (params.get("q") || copy.allProducts)
       : pathname === "/new"
-            ? copy.newTitle
+            ? (dropPage.data?.content?.title || copy.newTitle)
             : copy.title;
   function update(k, v) {
     const next = new URLSearchParams(params);
@@ -31,7 +35,7 @@ export default function Shop() {
   }
   return (
     <div className="section shop">
-      <SEO title={title} />
+      <SEO title={title} description={copy.description} />
       <PageHead title={title}>
         {copy.description}
       </PageHead>
