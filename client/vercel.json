@@ -1,1 +1,12 @@
-{"rewrites":[{"source":"/((?!assets/|robots.txt).*)","destination":"/index.html"}]}
+{
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://farmeri.vercel.app/sitemap.xml"
+    },
+    {
+      "source": "/((?!assets/|robots.txt).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
